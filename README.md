@@ -90,4 +90,15 @@ You will see:
 * [ ] Speech-to-Signal / Image-to-Signal perception
 * [ ] ARA::MindProtocol — direct signal flow control
 
+---
+
+## 👤 Author & Contact
+
+**Muhamed Kamilovich Satybaev**  
+Creator of ARA-NODE & ARU Paradigm
+
+- GitHub: [@Mukhameds](https://github.com/Mukhameds)
+- LinkedIn: [muhamed-satybaev-38b864362](https://www.linkedin.com/in/muhamed-satybaev-38b864362)
+- Telegram: `@redkms`
+- Email: `mukhameds@proton.me`
 
