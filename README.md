@@ -94,11 +94,10 @@ You will see:
 
 ## 👤 Author & Contact
 
-**Muhamed Kamilovich Satybaev**  
-Creator of ARA-NODE & ARU Paradigm
-
-- GitHub: [@Mukhameds](https://github.com/Mukhameds)
-- LinkedIn: [muhamed-satybaev-38b864362](https://www.linkedin.com/in/muhamed-satybaev-38b864362)
-- Telegram: `@redkms`
-- Email: `mukhameds@proton.me`
+**Author:** Satybaev Mukhamed Kamilovich  
+📞 +996 507 442 873  
+🌐 [ARU-AGI Website](https://mukhameds.github.io/ARU-AGI-Project/)  
+🐦 [Twitter/X](https://x.com/redkms2025)  
+🔗 [LinkedIn](https://www.linkedin.com/in/muhamed-satybaev-38b864362)  
+📁 [GitHub: Mukhameds](https://github.com/Mukhameds)
 
