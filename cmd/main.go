@@ -45,6 +45,13 @@ func main() {
 
 	// Интеграция PhantomEngine с instinct и emotion движками
 	phantom := internal.NewPhantomEngine(mem, instinctEngine, emotionEngine)
+	go func() {
+	for {
+		time.Sleep(5 * time.Second)
+		phantom.TickUpdatePhantoms()
+	}
+}()
+
 
 	suggestor := internal.NewSuggestorEngine(mem)
 	human := internal.NewHumanNodeEngine(mem)

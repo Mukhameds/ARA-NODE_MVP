@@ -206,3 +206,12 @@ func (m *MemoryEngine) FindAll(filter func(QBit) bool) []QBit {
 	}
 	return result
 }
+
+func (m *MemoryEngine) UpdateQBit(qbit QBit) {
+	m.Mu.Lock()
+	defer m.Mu.Unlock()
+
+	if _, exists := m.QBits[qbit.ID]; exists {
+		m.QBits[qbit.ID] = qbit
+	}
+}
