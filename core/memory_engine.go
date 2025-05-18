@@ -8,8 +8,8 @@ import (
 
 // MemoryEngine — сигнальная память агента
 type MemoryEngine struct {
-	QBits map[string]QBit
-	Mu    sync.Mutex
+	QBits       map[string]QBit
+	Mu          sync.Mutex
 	PhantomTree []PhantomLog
 }
 
@@ -34,6 +34,16 @@ func (m *MemoryEngine) GetQBit(id string) (QBit, bool) {
 	defer m.Mu.Unlock()
 	q, exists := m.QBits[id]
 	return q, exists
+}
+
+// DeleteQBit — удалить QBit по ID
+func (m *MemoryEngine) DeleteQBit(id string) {
+	m.Mu.Lock()
+	defer m.Mu.Unlock()
+	if _, exists := m.QBits[id]; exists {
+		delete(m.QBits, id)
+		fmt.Println("[MemoryEngine] ❌ QBit deleted:", id)
+	}
 }
 
 // DecayQBits — уменьшает вес старых или слабых QBit
@@ -196,6 +206,3 @@ func (m *MemoryEngine) FindAll(filter func(QBit) bool) []QBit {
 	}
 	return result
 }
-
-
-

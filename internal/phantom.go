@@ -3,99 +3,170 @@ package internal
 import (
 	"fmt"
 	"strings"
+	"time"
+
 	"ara-node/core"
 )
 
-// FanthomEngine — генератор фантомов
-type FanthomEngine struct {
-	Memory *core.MemoryEngine
+// PhantomEngine — генератор фантомов
+type PhantomEngine struct {
+	Memory    *core.MemoryEngine
+	Instincts *core.InstinctEngine
+	Emotions  *core.EmotionEngine
 }
 
-func NewFanthomEngine(mem *core.MemoryEngine) *FanthomEngine {
-	return &FanthomEngine{Memory: mem}
+func NewPhantomEngine(mem *core.MemoryEngine, inst *core.InstinctEngine, emo *core.EmotionEngine) *PhantomEngine {
+	return &PhantomEngine{
+		Memory:    mem,
+		Instincts: inst,
+		Emotions:  emo,
+	}
 }
 
-func (fe *FanthomEngine) TriggerFromMatch(sig core.Signal) {
-	qbits := fe.Memory.FindByPhase(sig.Phase, 0.05)
+func (pe *PhantomEngine) TriggerFromMatch(sig core.Signal) {
+	if sig.Weight < 0.5 {
+		fmt.Println("[PhantomEngine] ❌ Signal weight too low, skip phantom generation")
+		return
+	}
+	qbits := pe.Memory.FindByPhase(sig.Phase, 0.05)
 	if len(qbits) < 2 {
 		return
 	}
-	fe.GeneratePhantomChain(qbits)
+	pe.GeneratePhantomChain(qbits)
 }
 
-func (fe *FanthomEngine) GeneratePhantomChain(chain []core.QBit) {
+func (pe *PhantomEngine) GeneratePhantomChain(chain []core.QBit) {
 	var summary string
 	var sources []string
 	var signalMass float64
 	seen := map[string]bool{}
-	phantomCount := 0
 	allPhantom := true
 
 	for _, q := range chain {
 		if seen[q.ID] {
-			return // цикл
+			fmt.Println("[PhantomEngine] ❌ Cycle detected, abort phantom generation")
+			return
 		}
 		seen[q.ID] = true
+
+		// Исключаем фантомные QBit
+		if q.Type == "phantom" || strings.HasPrefix(q.Content, "[phantom]") {
+			continue
+		}
+
+		allPhantom = false
 
 		inf := 1.0
 		if q.Type == "standard" {
 			inf += 1.5
 		}
-		if contains(q.Tags, "instinct") {
+		if core.Contains(q.Tags, "instinct") {
 			inf += 1.2
 		}
-		if contains(q.Tags, "emotion") {
+		if core.Contains(q.Tags, "emotion") {
 			inf += 1.1
 		}
-		if !strings.HasPrefix(q.Content, "[phantom]") {
-			allPhantom = false
-		} else {
-			phantomCount++
-		}
+
 		signalMass += q.Phase * q.Weight * inf
 		summary += q.Content + " + "
 		sources = append(sources, q.ID)
 	}
 
 	summary = strings.TrimSuffix(summary, " + ")
-	if allPhantom || signalMass < 3.0 {
-		return // отклонить слабый или фантомный только фантом
+
+	if allPhantom {
+		fmt.Println("[PhantomEngine] ❌ All QBits are phantom, abort generation")
+		return
+	}
+	if signalMass < 5.0 {
+		fmt.Println("[PhantomEngine] ❌ Signal mass too low:", signalMass)
+		return
+	}
+	if len(summary) > 256 {
+		fmt.Println("[PhantomEngine] ❌ Summary too long, abort generation")
+		return
 	}
 
-	for _, existing := range fe.Memory.FindByTag("phantom") {
+	for _, existing := range pe.Memory.FindByTag("phantom") {
 		if existing.Content == "[phantom] "+summary {
-			return // уже существует
+			fmt.Println("[PhantomEngine] ❌ Duplicate phantom exists, skip")
+			return
 		}
 	}
 
-	fmt.Println("[FanthomChain] 🧩 Related QBits:")
+	if !pe.CheckInstinctEmotionAlignment(signalMass, summary) {
+		fmt.Println("[PhantomEngine] ❌ Phantom rejected by instinct/emotion filter")
+		return
+	}
+
+	fmt.Println("[PhantomChain] 🧩 Related QBits:")
 	for _, q := range chain {
 		fmt.Printf("• %s | %.2f | %s\n", q.ID, q.Phase, q.Content)
 	}
-	fmt.Println("[FanthomChain] → Hypothesis: something meaningful links these signals.")
+	fmt.Println("[PhantomChain] → Hypothesis: something meaningful links these signals.")
 
-	// Создаём фантом
-	newQ := fe.Memory.CreateQBit("[phantom] " + summary)
+	// Создание фантома
+	newQ := pe.Memory.CreateQBit("[phantom] " + summary)
 	newQ.Tags = []string{"phantom"}
 	newQ.Type = "phantom"
 	newQ.Phase = chain[0].Phase
 	newQ.Weight = signalMass / float64(len(chain))
-	fe.Memory.StoreQBit(*newQ)
+	pe.Memory.StoreQBit(*newQ)
 
-	fe.Memory.PhantomTree = append(fe.Memory.PhantomTree, core.PhantomLog{
+	go pe.DecayPhantom(newQ.ID, newQ.Weight)
+
+	pe.Memory.PhantomTree = append(pe.Memory.PhantomTree, core.PhantomLog{
 		PhantomID: newQ.ID,
 		SourceIDs: sources,
 	})
 
-	fmt.Println("[FanthomEngine] 🔮 Phantom QBit:", newQ.ID)
-	fmt.Println("[FanthomEngine] ↪ Sources:", strings.Join(sources, ","))
+	fmt.Println("[PhantomEngine] 🔮 Phantom QBit:", newQ.ID)
+	fmt.Println("[PhantomEngine] ↪ Sources:", strings.Join(sources, ","))
 }
 
-func contains(tags []string, key string) bool {
-	for _, t := range tags {
-		if t == key {
-			return true
+func (pe *PhantomEngine) CheckInstinctEmotionAlignment(signalMass float64, summary string) bool {
+	instincts := pe.Instincts.Tick(time.Now(), summary)
+	emotions := pe.Emotions.CurrentEmotions()
+
+	allowedInstincts := []string{"instinct_think", "instinct_repeat"}
+	blockedEmotions := []string{"fear", "anger", "disgust"}
+
+	allow := false
+
+	for _, inst := range instincts {
+		for _, ai := range allowedInstincts {
+			if inst == ai {
+				allow = true
+				break
+			}
+		}
+		if allow {
+			break
 		}
 	}
-	return false
+
+	for _, emo := range emotions {
+		for _, be := range blockedEmotions {
+			if emo == be {
+				allow = false
+				break
+			}
+		}
+		if !allow {
+			break
+		}
+	}
+
+	if signalMass < 5.0 {
+		allow = false
+	}
+
+	return allow
+}
+
+func (pe *PhantomEngine) DecayPhantom(id string, weight float64) {
+	if weight < 0.1 {
+		pe.Memory.DeleteQBit(id)
+		fmt.Println("[PhantomEngine] ⬇️ Phantom deleted due to low mass:", id)
+	}
 }
