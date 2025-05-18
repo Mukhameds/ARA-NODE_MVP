@@ -1,25 +1,39 @@
 package core
-import "fmt"
 
-// ReactionRule — условие реакции блока
+import (
+	"fmt"
+	"time"
+)
+
 type ReactionRule struct {
-	MatchTag   string
-	MinPhase   float64
-	Action     func(sig Signal)
+	MatchTags []string
+	MinPhase  float64
+	Action    func(sig Signal)
 }
+
 
 // Block — реактивный узел, срабатывающий на сигнал
 type Block struct {
-	ID    string
-	Rules []ReactionRule
+	ID            string
+	Rules         []ReactionRule
+	LastTriggered time.Time
+	ReactionCount int
 }
 
 // React — проверка и реакция на сигнал
 func (b *Block) React(sig Signal) {
 	for _, rule := range b.Rules {
-		if contains(sig.Tags, rule.MatchTag) && sig.Phase >= rule.MinPhase {
-			fmt.Printf("[Block %s] Reacting to signal: %s\n", b.ID, sig.Content)
-			rule.Action(sig)
+		if sig.Phase < rule.MinPhase {
+			continue
+		}
+		for _, match := range rule.MatchTags {
+			if contains(sig.Tags, match) {
+				fmt.Printf("[Block %s] Reacting to signal: %s\n", b.ID, sig.Content)
+				b.LastTriggered = time.Now()
+				b.ReactionCount++
+				rule.Action(sig)
+				break
+			}
 		}
 	}
 }

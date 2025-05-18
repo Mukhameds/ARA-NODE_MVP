@@ -10,6 +10,7 @@ import (
 type MemoryEngine struct {
 	QBits map[string]QBit
 	Mu    sync.Mutex
+	PhantomTree []PhantomLog
 }
 
 // NewMemoryEngine — инициализация памяти
@@ -181,3 +182,20 @@ func (m *MemoryEngine) Broadcast(q *QBit) {
 	m.StoreQBit(*q)
 	fmt.Println("[MemoryEngine] 📡 Broadcast QBit:", q.ID)
 }
+
+// FindAll — вернуть все QBits, удовлетворяющие фильтру
+func (m *MemoryEngine) FindAll(filter func(QBit) bool) []QBit {
+	m.Mu.Lock()
+	defer m.Mu.Unlock()
+
+	var result []QBit
+	for _, q := range m.QBits {
+		if filter(q) {
+			result = append(result, q)
+		}
+	}
+	return result
+}
+
+
+

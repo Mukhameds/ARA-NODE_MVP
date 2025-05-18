@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+
 // SignalEngine — обрабатывает входящие сигналы и вызывает реакцию
 type SignalEngine struct {
 	Memory *MemoryEngine
@@ -26,6 +27,8 @@ func (se *SignalEngine) ProcessSignal(sig Signal) Reaction {
 		CreatedAt: time.Now(),
 		Weight:    sig.Weight,
 		Phase:     sig.Phase,
+		Type:      sig.Type,
+		Origin:    sig.Origin,
 	}
 	se.Memory.StoreQBit(qbit)
 

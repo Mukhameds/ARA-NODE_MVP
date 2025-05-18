@@ -78,6 +78,13 @@ func (we *WillEngine) DesireLoop() {
 					fmt.Println("←", sig.Content)
 					we.Delay = 8 * time.Second
 				} else {
+					fmt.Println("[WillEngine] ❌ Rejected:", q.ID)
+					we.Memory.AdjustWeight(q.ID, -0.2)
+					adjusted := we.Memory.QBits[q.ID]
+					if adjusted.Weight < 0.1 {
+						we.Memory.AddTag(q.ID, "archived")
+						fmt.Println("[WillEngine] 🗃 Archived:", q.ID)
+					}
 					we.Delay *= 2
 					if we.Delay > 120*time.Second {
 						we.Delay = 120 * time.Second
