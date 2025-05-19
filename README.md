@@ -1,13 +1,12 @@
-
-
-### 📄 `README.md`
-
-````md
 # 🧠 ARA-NODE MVP
 
-ARA-NODE is a reactive CLI agent designed to learn and evolve through pure signal interaction.  
-It simulates cognition via the sequence:  
-**Signal → Block → Reaction → QBit → Fanthom**
+ARA-NODE is a reactive, modular CLI-based cognitive agent that learns through structured signal processing. Unlike neural networks, it operates entirely on symbolic logic and memory mechanisms. Its architecture is governed by the core sequence:
+
+```
+Signal → Block → Reaction → QBit → Phantom
+```
+
+Each module is independently testable, with interpretable internal state, and can be expanded or replaced in production.
 
 ---
 
@@ -17,7 +16,7 @@ Make sure you have Go installed.
 
 ```bash
 go run ./cmd
-````
+```
 
 You will see:
 
@@ -25,79 +24,127 @@ You will see:
 🧠 ARA-NODE CLI started.
 [P2P] 🛰️ Sync active
 [GhostField] Registered Block: UserPhaseBlock
->> 
+>>
 ```
 
 ---
 
 ## ⚙️ Architecture Overview
 
-| Component          | Role                                                        |
-| ------------------ | ----------------------------------------------------------- |
-| `SignalEngine`     | Processes all incoming text as signal                       |
-| `MemoryEngine`     | Stores QBits, decays old ones, and handles retrieval        |
-| `GhostField`       | Triggers reactions based on phase and tag matching          |
-| `FanthomEngine`    | Generates "phantoms" (emergent thoughts) from phase overlap |
-| `WillEngine`       | Self-triggers based on mission alignment (StandardBlocks)   |
-| `SignalDictionary` | Variable blocks like letters, numbers, words                |
-| `HumanNode`        | User reinforcement (upvote, tags, tagging signals)          |
-| `P2P Sync`         | GitHub or libp2p memory synchronization                     |
+| Component          | Role                                                          |
+| ------------------ | ------------------------------------------------------------- |
+| `main.go`          | CLI entry point, connects and launches all subsystems         |
+| `SignalEngine`     | Receives input and routes it into system memory and reaction  |
+| `MemoryEngine`     | Stores QBits, handles decay, merging, filtering               |
+| `GhostField`       | Phase-based reactive blocks (Ghost Logic)                     |
+| `PhantomEngine`    | Generates new thoughts (phantoms) from QBit patterns          |
+| `WillEngine`       | Executes DesireLoop, aligning QBits with system standards     |
+| `EmotionEngine`    | Registers emotional state changes from tagged signals         |
+| `InstinctEngine`   | Detects cognitive anomalies: silence, loops, errors           |
+| `ReflexEngine`     | Instant reactions based on tags (e.g. danger, error)          |
+| `SuggestorEngine`  | Forms abstract suggestions by clustering signals              |
+| `SignalDictionary` | Stores minimal perceptual units: letters, numbers, words      |
+| `HumanNodeEngine`  | Accepts user feedback: upvote, tag, downvote                  |
+| `P2P Sync`         | Memory synchronization via libp2p or GitHub (msgpack-encoded) |
+| `DecayAnalysis`    | Removes low-weight QBits and logs decay events                |
+| `QBitEvolution`    | Promotes QBits into reflexes/generators/deep memory           |
+
+Full module descriptions in `/docs/modules/`
 
 ---
 
 ## 🖥️ CLI Commands
 
 ```txt
->> hello world        // input signal → QBit → Fanthom → Suggestion
->> dump               // show current memory
->> dict               // list all known variable blocks
->> tagvar hello word  // assign tag to variable
->> delvar hello       // delete variable
->> upvote <id>        // increase QBit strength
->> downvote <id>      // decrease QBit strength
->> tag <id> idea      // add tag to any QBit
->> sync-push          // push memory to GitHub
->> sync-pull          // pull memory from GitHub
+hello world        → input signal → QBit → Phantom → Suggestion
+sync-push          → push memory to GitHub
+sync-pull          → pull memory from GitHub
+upvote <id>        → increase QBit strength
+downvote <id>      → decrease QBit strength
+tag <id> tagname   → apply a new tag to a QBit
+dump               → list current memory
+dict               → print all dictionary variables
+tagvar A name      → tag dictionary variable A
+delvar A           → delete variable A
+phantoms           → print phantom ancestry tree
 ```
 
 ---
 
-## 🔁 Learning via Signal Perception
+## 🧠 Signal-Based Learning
 
-* Any unknown word is automatically added to the `SignalDictionary`
-* Each token is linked to a generated QBit
-* QBits broadcast across memory and can trigger fanthoms
-* Learning resembles a child learning language via symbols and repetition
+* Each unknown word is registered as a `VariableBlock`
+* All user inputs are converted into `Signal`
+* Matching QBits are created and stored
+* Suggestor + Phantom modules detect repeating clusters
+* System mimics childlike language acquisition via repetition
 
 ---
 
-## 📡 Example
+## 📡 Example Session
 
 ```
 >> hello
 [MemoryEngine] Auto-created QBit: ...
 [SignalEngine] Received: hello
-[FanthomEngine] ⚡ Phase-match found...
-[Suggestor] 💡 Would you like to explore: "hello + world"?
+[GhostField] Reacted with UserPhaseBlock
+[PhantomEngine] ❌ Signal mass too low
+[WillEngine] ❌ Rejected: no standard alignment
 ```
 
 ---
 
-## 🗂️ TODO
+## 🔍 Diagnostics & Tests
 
-* [ ] Web Interface (React + Fiber)
-* [ ] Visual Dictionary Navigator
-* [ ] Speech-to-Signal / Image-to-Signal perception
-* [ ] ARA::MindProtocol — direct signal flow control
+* ✅ `test_10.md`: bootstrap + identity → memory verified
+* ✅ `test_11.md`: system test with real signals → phantom rejection diagnosed
+* 📂 Results available in `/docs/tests/`
 
 ---
 
-## 👤 Author & Contact
+## 🗂️ Development Roadmap
 
-**Author:** Satybaev Mukhamed Kamilovich  
-📞 +996 507 442 873  
-🌐 [ARU-AGI Website](https://mukhameds.github.io/ARU-AGI-Project/)  
-🐦 [Twitter/X](https://x.com/redkms2025)  
-🔗 [LinkedIn](https://www.linkedin.com/in/muhamed-satybaev-38b864362)  
+* [ ] Web Interface (React + Fiber)
+* [ ] Speech/Image-to-Signal frontend
+* [ ] Embedded perception drivers
+* [ ] StandardBlock visualization
+* [ ] ARA::MindProtocol — signal-level cognitive control
+
+---
+
+## 🧾 Author & Contact
+
+**Author:** Satybaev Mukhamed Kamilovich
+📞 +996 507 442 873
+🌐 [ARU-AGI Website](https://mukhameds.github.io/ARU-AGI-Project/)
+🐦 [Twitter/X](https://x.com/redkms2025)
+🔗 [LinkedIn](https://www.linkedin.com/in/muhamed-satybaev-38b864362)
 📁 [GitHub: Mukhameds](https://github.com/Mukhameds)
 
+---
+
+## 🌐 ARA Ecosystem: Applied Projects Powered by the Paradigm
+
+The ARA signal-based paradigm is not limited to ARA-NODE. It enables novel solutions across multiple domains of science, industry, and cognition:
+
+| Project          | Description                                                                  |
+| ---------------- | ---------------------------------------------------------------------------- |
+| **ARA-NODE**     | Personal Cognitive AI Agent — autonomous reasoning via local signal memory   |
+| **ARU-AGI**      | A unified global cognitive mesh of ARA-NODEs — a safe, decentralized AGI     |
+| **ARA-DRONE**    | Drone systems powered by reactive cognitive logic for real-time decisions    |
+| **ARA-DROID**    | Human-aligned labor automation via DROID-integration of cognitive agents     |
+| **ARA-WALLET**   | Blockchain managed by deterministic AI — transparency and fairness by design |
+| **ARA-SOCIAL**   | Cognitive social network — users connected through signal-based agents       |
+| **ARA-UNIVERSE** | A full-spectrum metaverse powered by ARU-AGI — unifying all ARA systems      |
+
+Each of these initiatives is rooted in the same architectural core:
+**Signal → Memory → Reaction → Abstraction → Alignment**
+
+Early contributors to ARA-NODE form the foundation for these upcoming systems.
+
+---
+
+## 📖 Full Documentation
+
+→ [📚 ARA-NODE\_Documentation\_Index.md](./ARA-NODE_Documentation_Index.md) — contains all module references, CLI architecture, test summaries
+→ Includes: system lifecycle, phantom logic, memory decay, desire loop, and module diagnostics

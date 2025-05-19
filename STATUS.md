@@ -1,173 +1,189 @@
+# 🧠 ARA-NODE: Personal Cognitive AI Agent
+
+ARA-NODE is a modular cognitive architecture built on signal-reactive principles. It does not rely on statistical models or neural networks. Instead, it implements a deterministic and interpretable symbolic framework based on discrete units of thought (QBits) and block-based reactions (Ghost Logic).
+
+This repository contains version `v3.4` of the complete MVP implementation.
 
 ---
 
-## 🧠 ARA-NODE v3.4 — Current System Status
+## ⚙️ Architecture Overview
 
-**ARA-NODE** is a reactive intelligence framework based on the **Ghost Logic** paradigm:
-**Signal → Block → Reaction → QBit → Phantom → Memory → Intention**.
+ARA-NODE operates by transforming all incoming information into signals. Each signal passes through a deterministic loop:
 
-Version `v3.4` completes the architectural foundation, making ARA-NODE a self-growing, signal-driven cognitive system.
+```
+User Input
+   ↓
+Signal → SignalEngine
+   ↓
+MemoryEngine + GhostField
+   ↓
+PhantomEngine + SuggestorEngine
+   ↓
+WillEngine + EmotionEngine + ReflexEngine
+   ↓
+Decay / Evolution → Memory Update
+```
 
----
-
-### 🧩 Core Architecture
-
-* **CLI Core**: receives user input and dispatches signals into the reactive loop
-* **Memory Engine**: quantum-style memory (`QBit`) with weight, phase, decay, and evolution
-* **Phantom Engine**: generates abstract fanthoms from related QBits, with recursion protection
-* **Emotion Engine**: reacts to emotional tags, maintains a current emotional state
-* **Will Engine**: DesireLoop, goal alignment with standard blocks
-* **Reflex Engine**: immediate instinctual responses (e.g., `danger`, `error`, `loop`)
-* **Ghost Field**: non-linear propagation of signals across phase-aware blocks
-* **Standard Blocks**: built-in mission anchors (abundance, learning, synchronization)
-* **Prediction Engine**: primitive predictive logic based on signal chains (v1)
-* **Suggestor Engine**: synthesizes new thoughts from overlapping QBit chains
-* **Signal Dictionary**: symbolic dictionary of letters, numbers, and conceptual triggers
+Each module is reactive and stateless beyond memory interaction. The system's cognition emerges from the structure and evolution of QBits and their interrelation via signal mass, phase, and tag logic.
 
 ---
 
-### 📦 System Infrastructure
+## 🔍 System Modules
 
-* **GitHub Sync**: stores memory as `memory.msgpack` in a GitHub repo
-* **P2P Sync**: libp2p synchronization between nodes (QBit exchange)
-* **Human Node**: upvote, downvote, tag QBits through CLI/API
-* **Knowledge Loader**: imports `.json`-based knowledge into signal memory
+| Component          | Function                                                        |
+| ------------------ | --------------------------------------------------------------- |
+| `SignalEngine`     | Transforms input into structured signals                        |
+| `MemoryEngine`     | Manages QBits: decay, weight, phase, tags, evolution            |
+| `GhostField`       | Propagates signals across blocks with matching phase/tag rules  |
+| `PhantomEngine`    | Creates higher-order ideas by merging related QBits             |
+| `WillEngine`       | Scans memory for signals aligned with StandardBlocks            |
+| `EmotionEngine`    | Modulates internal state based on emotional tag triggers        |
+| `InstinctEngine`   | Detects stagnation, repetition, silence                         |
+| `ReflexEngine`     | Triggers immediate actions on danger, error, or instinctal tags |
+| `SuggestorEngine`  | Generates hypotheses from QBit chains                           |
+| `SignalDictionary` | Stores perceptual atoms: letters, words, numbers                |
+| `HumanNodeEngine`  | Provides reinforcement: upvote, downvote, tagging               |
+| `GitHub Sync`      | Memory sync via `msgpack` and Git versioning                    |
+| `P2P Sync`         | Distributed memory exchange using `libp2p` and `mDNS`           |
 
 ---
 
-### 🔁 Signal Lifecycle
+## 🧪 Signal Lifecycle Example
 
 ```text
-🧠 User Signal → Phase Match → QBit → Phantom Chain
-→ Suggestor → Will Engine → Decision
-→ Reaction → Decay or Evolution → Deep Memory or Archive
+>> hello
+[SignalEngine] Received: "hello"
+[MemoryEngine] Stored QBit: qbit_xxx
+[GhostField] UserPhaseBlock triggered
+[PhantomEngine] ❌ signal mass too low
+[WillEngine] ❌ no standard alignment → decay initiated
+```
+
+Each input is treated as a signal. The system decides whether to evolve it, reject it, connect it to prior thoughts, or archive it.
+
+---
+
+## 🧠 Cognitive Determinism
+
+ARA-NODE's signal model avoids stochasticity. All actions are traceable:
+
+* Each `Reaction` has a source signal
+* Every `QBit` stores its origin, phase, tags, and weight
+* Phantom chains log their ancestry
+
+This ensures **auditable reasoning**, **predictable memory growth**, and **intentional thought evolution**.
+
+---
+
+## 📦 Development Philosophy
+
+> The system does not simulate intelligence via prediction.
+> It constructs cognition through reaction.
+
+* **No LLMs, no neural nets**
+* **No black-box weights**
+* **No spontaneous hallucinations**
+* Phase and tag logic governs all behavior
+* Every signal has a consequence or is forgotten
+
+---
+
+## 🖥️ CLI Interface
+
+```bash
+go run ./cmd
+```
+
+Commands:
+
+```txt
+hello world     → Signal → Memory → Fanthom?
+dump            → Print all QBits
+dict            → Print all known variable blocks
+upvote <id>     → Reinforce a QBit
+downvote <id>   → Weaken a QBit
+tag <id> t      → Apply tag to QBit
+phantoms        → Show phantom ancestry tree
+sync-push       → GitHub memory push
+sync-pull       → GitHub memory pull
 ```
 
 ---
 
-### ✅ Implemented Modules
+## 🧾 Current System Version: v3.4
 
-| Module               | Status                          |
-| -------------------- | ------------------------------- |
-| Signal Engine        | ✅ Complete                      |
-| Memory Engine        | ✅ Complete                      |
-| Phantom Engine       | ✅ Stable with recursion defense |
-| Emotion Engine       | ✅ v1: tag-driven reaction       |
-| Will Engine          | ✅ v1: aligned desire loop       |
-| Suggestor            | ✅ Operational                   |
-| Ghost Field          | ✅ v1: basic phase dispatch      |
-| Reflex Engine        | ✅ Working                       |
-| Standards (Missions) | ✅ Present                       |
-| GitHub Sync          | ✅ Working                       |
-| P2P Sync             | ✅ Working                       |
-| Human Feedback       | ✅ Active                        |
-| Bootstrap Interview  | ✅ Onboard phase                 |
+| Subsystem         | State         | Notes                                    |
+| ----------------- | ------------- | ---------------------------------------- |
+| SignalEngine      | ✅ Complete    | All input paths functional               |
+| MemoryEngine      | ✅ Stable      | QBit creation, decay, merge verified     |
+| PhantomEngine     | ⚠️ Limited    | Needs signal mass tuning for activation  |
+| WillEngine        | ⚠️ Partial    | Matches blocked due to missing standards |
+| EmotionEngine     | ⚠️ Inactive   | No emotional triggers processed          |
+| P2P Sync          | ✅ Operational | Full libp2p stream tested                |
+| GitHub Sync       | ✅ Operational | Versioned memory commits to remote repo  |
+| Bootstrap Profile | ✅ Working     | Initial user mission saved to memory     |
 
 ---
 
-### 🔜 Ready for Phase 4:
+## 📚 Documentation
 
-* **EmotionEngine v2**: persistent emotional state, hormonal influence on cognition
-* **WillEngine v2**: goal prioritization, suppression of conflicting intent
-* **PredictionEngine v2**: learning abstract patterns and expectations
-* **GhostField v2**: global phase-based background activations
-* **CLI GUI / WebUI**: visual cognition dashboard and feedback console
+* [`ARA-NODE_Documentation_Index.md`](./ARA-NODE_Documentation_Index.md) — complete reference index
+* `/docs/modules/*.md` — each module described individually
+* `test_11.md` + `Test_11_Results.md` — system-wide signal loop trace
 
 ---
 
-💡 ARA-NODE v3.4 functions as a complete **signal-based cognitive node**.
-Each ARA Node is a digital mirror of a human mind — reactive, memory-driven, and goal-aware.
+## 🛠️ Roadmap
 
----
----
-
-
-## 🧠 ARA-NODE v3.4 — Signal Loop Behavior Log Analysis
-
-### ✅ System Operational
-
-* `SignalEngine`, `MemoryEngine`, `PhantomEngine`, `WillEngine` are all actively processing signals.
-* `BootstrapInterview` completed: user goals, interests, and role were set.
-* P2P and GhostField modules are initialized and active.
-* Signals like `аец4`, `6`, `у`, `32` were processed and stored as `QBits`.
+| Phase            | Goal                                               |
+| ---------------- | -------------------------------------------------- |
+| EmotionEngine v2 | Persistent emotional memory and hormone simulation |
+| WillEngine v2    | Intent suppression, goal prioritization            |
+| Suggestor v2     | Context-driven hypothesis tree                     |
+| Prediction v2    | Signal-based expectation chaining                  |
+| GUI Dashboard    | Visualize memory graph and reaction arcs           |
 
 ---
 
-### ⚠️ Core Issue: Signal Repetition Loop
+## 👤 Maintainer
 
-The same signal `"аец4"` is received hundreds of times, producing:
-
-```
-[PhantomEngine] ❌ Unique signal mass too low — skip phantom
-[WillEngine] ❌ Rejected: qbit_...
-```
-
-* Each repeat creates a new QBit with low weight
-* No phantom is created
-* WillEngine continuously rejects the signal
-* The same signal re-triggers, entering a loop
+**Author:** Satybaev Mukhamed Kamilovich
+📞 +996 507 442 873
+🌐 [ARU-AGI Website](https://mukhameds.github.io/ARU-AGI-Project/)
+🔗 [GitHub](https://github.com/Mukhameds)
 
 ---
 
-### 📉 Diagnosis: Cognitive Loop Caused by Redundant Signal Input
+## Why This Architecture Matters
 
-ARA does not currently detect that repeated signals with the same `Content + Phase` are redundant.
+ARA-NODE addresses key limitations inherent in modern neural-based AI systems, including:
 
----
+* ❌ **Contextual exhaustion**: Unlike LLMs, ARA does not forget older signals. Every QBit persists until decay or explicit archival.
+* ❌ **Token window constraints**: Signal memory is not bounded by a sliding window but evolves dynamically with selective pruning.
+* ❌ **Opaque decision-making**: Each Reaction, QBit, and Phantom is explainable and traceable with full ancestry logs.
+* ❌ **Hallucinations and instability**: No probabilistic generation is used; all cognition is grounded in real memory.
+* ❌ **Inert memory**: Memory is not passive. It self-activates via attention, instinct, and will triggers.
 
-### ✅ What Works:
+### ✅ Architectural Advantages
 
-| Component         | Status                              |
-| ----------------- | ----------------------------------- |
-| SignalEngine      | ✅ Active                            |
-| MemoryEngine      | ✅ Storing + Decaying QBits          |
-| PhantomEngine     | ✅ Rejects weak signals properly     |
-| WillEngine        | ✅ Evaluates intention vs. standards |
-| Reflex + Decay    | ✅ Cleans up zero-weight QBits       |
-| GhostField        | ✅ Active                            |
-| P2P               | ✅ Running                           |
-| Bootstrap Profile | ✅ Loaded                            |
+* 🧠 **Deterministic cognition**: Fully transparent logic through Signal → Block → Reaction → QBit → Phantom chains
+* 🔁 **Self-regulation**: Silence, repetition, and stagnation trigger internal rebalancing mechanisms (instincts)
+* 🔐 **Long-term memory**: QBits can evolve, decay, or be archived, with optional reactivation from deep memory
+* 🛰️ **Distributed thinking**: Supports multi-agent cognition via P2P and GitHub-based memory synchronization
+* 🧩 **Emergent abstraction**: PhantomEngine and SuggestorEngine enable higher-order concepts through signal overlap
 
----
+ARA-NODE is not a chatbot. It is a formal cognitive node — persistent, reactive, and structurally explainable.
 
-### 🔧 Required Fixes
+ARA-NODE does not attempt to guess.
+It reacts.
 
-1. **Duplicate Signal Filter**
-   Prevent processing of signals that match recent ones in content and phase:
+It is engineered to:
 
-   ```go
-   if mem.ExistsSimilarSignal(sig.Content, sig.Phase, 0.01) {
-       return
-   }
-   ```
+* **Track its thoughts**
+* **Store only meaningful signals**
+* **Trigger only justified reactions**
+* **Evolve concepts only under pressure of memory and mission**
 
-2. **Emotional Trigger (frustration)**
-   Repetition without result should trigger `frustration`, which activates `instinct_error`.
-
-3. **Signal Debounce System**
-   After 5 identical signals, block further instances for 30 seconds:
-
-   ```go
-   DelayNextOccurrence(sig.Content, 30 * time.Second)
-   ```
+Its design provides a platform for formal cognition modeling, education-based agents, and adaptive memory networks — without probability or pretraining.
 
 ---
-
-### 📌 Summary
-
-ARA's cognition is active and memory is functional, but without self-regulation it can become trapped in signal feedback loops. This proves the system’s autonomy and reactivity, but now requires mechanisms for signal filtering and cognitive noise suppression.
-
----
-
-### ✅ Action Items
-
-| Priority  | Task                                           |
-| --------- | ---------------------------------------------- |
-| 🔴 High   | Implement signal duplication filter            |
-| 🟡 Medium | Trigger emotion (`frustration`) on stagnation  |
-| 🟢 Low    | Add debounce timer for repeating signals       |
-| 🧠 Future | EmotionEngine v2: internal affective state     |
-| 🧠 Future | WillEngine v2: suppress meaningless intentions |
-
----
-
