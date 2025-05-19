@@ -82,3 +82,38 @@ footer {
   padding: 2rem;
   font-size: 0.9rem;
 }
+
+/* Документационные карточки */
+.doc-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.doc-card {
+  background: #1a1a2e;
+  border: 1px solid #00ffcc33;
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-decoration: none;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.doc-card:hover {
+  transform: scale(1.02);
+  background: #24244a;
+}
+
+.doc-card h3 {
+  margin-top: 0;
+  color: #00ffcc;
+  font-size: 1.2rem;
+}
+
+.doc-card p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #c0c0ff;
+  margin-bottom: 0;
+}
