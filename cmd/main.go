@@ -25,6 +25,8 @@ func main() {
 	suggestor := internal.NewSuggestorEngine(mem)
 	decay := internal.NewDecayAnalysisEngine(mem)
 	prediction := internal.NewPredictionEngine(mem, nil, nil)
+	reflex := core.NewReflexEngine()
+	will := core.NewWillEngine(mem, nil, nil, phantom)
 
 	// === GHOST FIELD ===
 	ghost := core.NewGhostField()
@@ -49,13 +51,22 @@ func main() {
 		Action:    phantom.TriggerFromMatch,
 	}, 200*time.Millisecond)
 
+	ghost.Register("reflex", core.ReactionRule{
+		MatchTags: []string{"danger", "reflex", "instinct_error"},
+		MinPhase:  0.5,
+		Action:    reflex.React,
+	}, 100*time.Millisecond)
+
 	// === SIGNAL ENGINE ===
 	engine := core.NewSignalEngine(mem, ghost)
 	prediction.Engine = engine
 	prediction.Ghost = ghost
+	will.Engine = engine
+	will.Ghost = ghost
 
 	// === BACKGROUND LOOPS ===
 	internal.DefaultEmotionSet(emotion)
+	core.DefaultReflexSet(reflex)
 	decay.StartDecayLoop()
 
 	go func() {
@@ -74,6 +85,7 @@ func main() {
 
 	attention := core.NewAttentionEngine(mem, ghost, phantom, engine)
 	attention.StartBackgroundThinking()
+	will.DesireLoop()
 
 	// === CLI LOOP ===
 	for {
@@ -84,6 +96,11 @@ func main() {
 		if input == "exit" || input == "quit" {
 			fmt.Println("👋 Завершение работы.")
 			break
+		}
+
+		if input == "view" {
+			mem.ListQBits()
+			continue
 		}
 
 		sig := core.Signal{
