@@ -9,19 +9,25 @@ import (
 )
 
 // PhantomEngine — генератор фантомов
+// PhantomEngine — генератор фантомов
 type PhantomEngine struct {
-	Memory    *core.MemoryEngine
-	Instincts *core.InstinctEngine
-	Emotions  *core.EmotionEngine
+	Memory     *core.MemoryEngine
+	Instincts  *InstinctEngine
+	Emotions   *EmotionEngine
+	TimeEngine *TimeEngine // 🕒 биочасы
 }
 
-func NewPhantomEngine(mem *core.MemoryEngine, inst *core.InstinctEngine, emo *core.EmotionEngine) *PhantomEngine {
+func NewPhantomEngine(mem *core.MemoryEngine, inst *InstinctEngine, emo *EmotionEngine, te *TimeEngine) *PhantomEngine {
 	return &PhantomEngine{
-		Memory:    mem,
-		Instincts: inst,
-		Emotions:  emo,
+		Memory:     mem,
+		Instincts:  inst,
+		Emotions:   emo,
+		TimeEngine: te,
 	}
 }
+
+// (остальной код без изменений)
+
 
 func (pe *PhantomEngine) TriggerFromMatch(sig core.Signal) {
 	if sig.Weight < 0.5 {
@@ -51,24 +57,25 @@ func (pe *PhantomEngine) GeneratePhantomChain(chain []core.QBit) {
 	phantomCount := 0
 
 	for _, q := range chain {
+		age := q.AgeFrame()
+		if age == "emergent" || age == "legacy" {
+			continue
+		}
+
 		if seen[q.ID] {
 			fmt.Println("[PhantomEngine] ❌ Cycle detected, abort phantom generation")
 			return
 		}
 		seen[q.ID] = true
 
-		
-	// ⚠️ Фильтр по вложенным фантомам
-if strings.Contains(q.Content, "[phantom]") {
-	phantomCount++
-	if phantomCount > 1 {
-		fmt.Println("[PhantomEngine] ❌ Too many phantom references, abort")
-		return
-	}
-	continue
-}
-
-
+		if strings.Contains(q.Content, "[phantom]") {
+			phantomCount++
+			if phantomCount > 1 {
+				fmt.Println("[PhantomEngine] ❌ Too many phantom references, abort")
+				return
+			}
+			continue
+		}
 
 		allPhantom = false
 
@@ -83,27 +90,28 @@ if strings.Contains(q.Content, "[phantom]") {
 			inf += 1.1
 		}
 
-		signalMass += q.Phase * q.Weight * inf
+		boost := pe.Emotions.GetPhaseBoost(q.Tags)
+		instinctBoost := pe.Instincts.GetInstinctBoost(q.Tags)
+		timeFactor := pe.TimeEngine.TimeFactor()
+		signalMass += (q.Phase + boost + instinctBoost) * q.Weight * inf * timeFactor
+
 		summary += q.Content + " + "
 		sources = append(sources, q.ID)
 	}
 
 	summary = strings.TrimSuffix(summary, " + ")
 
-	// ⚠️ Очистка фантомных следов
 	if strings.Count(summary, "[phantom]") > 1 {
 		fmt.Println("[PhantomEngine] ❌ Phantom self-reference detected, abort")
 		return
 	}
 
-	// ✂️ Ограничение длины по смыслу (последние 5 элементов)
 	parts := strings.Split(summary, " + ")
 	if len(parts) > 5 {
 		parts = parts[len(parts)-5:]
 		summary = strings.Join(parts, " + ")
 	}
 
-	// 🔎 Сопоставление с эталонами
 	var stdTags []string
 	var stdWeightBonus float64
 	if id, priority, score := core.MatchWithStandards(summary); id != "" {
@@ -144,7 +152,6 @@ if strings.Contains(q.Content, "[phantom]") {
 	}
 	fmt.Println("[PhantomChain] → Hypothesis: something meaningful links these signals.")
 
-	// ✅ Финальное создание фантома
 	newQ := pe.Memory.CreateQBit("[phantom] " + summary)
 	newQ.Tags = append([]string{"phantom"}, stdTags...)
 	newQ.Type = "phantom"
@@ -165,6 +172,8 @@ if strings.Contains(q.Content, "[phantom]") {
 
 
 
+
+
 func (pe *PhantomEngine) CheckInstinctEmotionAlignment(signalMass float64, summary string) bool {
 	instincts := pe.Instincts.Tick(time.Now(), summary)
 	emotions := pe.Emotions.CurrentEmotions()
@@ -176,7 +185,7 @@ func (pe *PhantomEngine) CheckInstinctEmotionAlignment(signalMass float64, summa
 
 	for _, inst := range instincts {
 		for _, ai := range allowedInstincts {
-			if inst == ai {
+			if inst.ID == ai {
 				allow = true
 				break
 			}

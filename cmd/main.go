@@ -1,271 +1,104 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strings"
 	"time"
 
-	"ara-node/config"
 	"ara-node/core"
 	"ara-node/internal"
-
-	_ "github.com/libp2p/go-libp2p/core/peer"
 )
 
 func main() {
 	fmt.Println("🧠 ARA-NODE CLI started.")
 
-	kernel := config.InitSelfKernel()
-	fmt.Println("Agent ID:", kernel.AgentID)
-
+	// === CORE INITIALIZATION ===
 	mem := core.NewMemoryEngine()
-	signalDict := core.NewSignalDictionary(mem)
+	dict := core.NewSignalDictionary(mem)
+	internal.RunBootstrap(mem, dict)
 
-	p2p, err := internal.StartP2P(mem)
-	if err != nil {
-		fmt.Println("[P2P ❌]", err)
-	} else {
-		fmt.Println("[P2P] 🛰️ Sync active")
-	}
-	_ = p2p
-
-	missionQ := mem.CreateQBit(kernel.CoreMission)
-	missionQ.Tags = []string{"mission", "identity"}
-	missionQ.Type = "system"
-	mem.StoreQBit(*missionQ)
-
-	signalEngine := core.NewSignalEngine(mem)
-
-	// Инициализация движков инстинктов и эмоций
-	instinctEngine := core.NewInstinctEngine()
-	emotionEngine := core.NewEmotionEngine()
-	core.DefaultEmotionSet(emotionEngine)
-
-	// Интеграция PhantomEngine с instinct и emotion движками
-	phantom := internal.NewPhantomEngine(mem, instinctEngine, emotionEngine)
-	go func() {
-	for {
-		time.Sleep(5 * time.Second)
-		phantom.TickUpdatePhantoms()
-	}
-}()
-
-
+	// === MODULES ===
+	emotion := internal.NewEmotionEngine(mem)
+	instinct := internal.NewInstinctEngine()
+	emotion.Instincts = instinct
+	timeEngine := internal.NewTimeEngine()
+	phantom := internal.NewPhantomEngine(mem, instinct, emotion, timeEngine)
 	suggestor := internal.NewSuggestorEngine(mem)
-	human := internal.NewHumanNodeEngine(mem)
-	ghostField := core.NewGhostField()
-	will := core.NewWillEngine(mem)
-	will.DesireLoop()
-	core.RunBootstrap(mem, signalDict)
+	decay := internal.NewDecayAnalysisEngine(mem)
+	prediction := internal.NewPredictionEngine(mem, nil, nil)
 
-	attention := core.NewAttentionEngine(mem, ghostField, phantom, signalEngine)
+	// === GHOST FIELD ===
+	ghost := core.NewGhostField()
+
+	ghost.Register("emotion", core.ReactionRule{
+		MatchTags: []string{"emotion", "instinct", "success", "fail"},
+		MinPhase:  0.5,
+		Action:    emotion.React,
+	}, 200*time.Millisecond)
+
+	ghost.Register("suggestor", core.ReactionRule{
+		MatchTags: []string{"user", "phantom"},
+		MinPhase:  0.6,
+		Action: func(sig core.Signal) {
+			go suggestor.SuggestFromQBits()
+		},
+	}, 1*time.Second)
+
+	ghost.Register("phantom", core.ReactionRule{
+		MatchTags: []string{"phantom", "standard", "merge"},
+		MinPhase:  0.7,
+		Action:    phantom.TriggerFromMatch,
+	}, 200*time.Millisecond)
+
+	// === SIGNAL ENGINE ===
+	engine := core.NewSignalEngine(mem, ghost)
+	prediction.Engine = engine
+	prediction.Ghost = ghost
+
+	// === BACKGROUND LOOPS ===
+	internal.DefaultEmotionSet(emotion)
+	decay.StartDecayLoop()
+
+	go func() {
+		for {
+			time.Sleep(10 * time.Second)
+			prediction.Tick()
+		}
+	}()
+
+	go func() {
+		for {
+			time.Sleep(1 * time.Second)
+			timeEngine.Tick()
+		}
+	}()
+
+	attention := core.NewAttentionEngine(mem, ghost, phantom, engine)
 	attention.StartBackgroundThinking()
 
-	reflex := core.NewReflexEngine()
-	core.DefaultReflexSet(reflex)
-
-	decay := core.NewDecayAnalysisEngine(mem)
-	evolution := core.NewQBitEvolutionEngine(mem)
-
-	// Пример реактивного блока
-	block := &core.Block{
-		ID: "UserPhaseBlock",
-		Rules: []core.ReactionRule{
-			{
-				MatchTags: []string{"user"},
-				MinPhase:  0.8,
-				Action: func(sig core.Signal) {
-					fmt.Println("[Block Action] 🔁 Reacted to user signal:", sig.Content)
-				},
-			},
-		},
-	}
-	ghostField.RegisterBlock(block)
-
-	reader := bufio.NewReader(os.Stdin)
-
+	// === CLI LOOP ===
 	for {
-		fmt.Print("\n>> ")
-		input, _ := reader.ReadString('\n')
-		content := strings.TrimSpace(input)
-		if content == "" {
-			continue
-		}
-		attention.Suppress(3 * time.Second)
+		var input string
+		fmt.Print("> ")
+		fmt.Scanln(&input)
 
-		// команды словаря переменных
-		if content == "dict" {
-			for _, vb := range signalDict.All() {
-				fmt.Println("🔹", vb.ID, "|", vb.Tags, "| Reacts:", vb.Reacts)
-			}
-			continue
+		if input == "exit" || input == "quit" {
+			fmt.Println("👋 Завершение работы.")
+			break
 		}
 
-		if content == "whoami" {
-			fmt.Println("🤖 Agent ID:", kernel.AgentID)
-			fmt.Println("🎯 Mission:", kernel.CoreMission)
-			fmt.Println("🧬 Architect:", kernel.ArchitectID)
-			fmt.Println("⏱ Born:", kernel.Inception.Format(time.RFC822))
-			continue
-		}
-
-		if strings.HasPrefix(content, "tagvar ") {
-			parts := strings.Split(content, " ")
-			if len(parts) >= 3 {
-				signalDict.Tag(parts[1], parts[2])
-				fmt.Println("✅ Тег добавлен:", parts[1], "→", parts[2])
-			}
-			continue
-		}
-
-		if strings.HasPrefix(content, "delvar ") {
-			parts := strings.Split(content, " ")
-			if len(parts) >= 2 && signalDict.Delete(parts[1]) {
-				fmt.Println("❌ Удалено:", parts[1])
-			} else {
-				fmt.Println("⚠️ Не найдено:", parts[1])
-			}
-			continue
-		}
-
-		// команды памяти и синхронизации
-		if content == "dump" {
-			mem.ListQBits()
-			continue
-		}
-
-		if human.HandleCommand(content) {
-			continue
-		}
-
-		if content == "sync-push" {
-			err := internal.PushMemory(mem)
-			if err != nil {
-				fmt.Println("[GitSync ❌]", err)
-			}
-			continue
-		}
-
-		if content == "sync-pull" {
-			err := internal.PullMemory(mem)
-			if err != nil {
-				fmt.Println("[GitSync ❌]", err)
-			}
-			continue
-		}
-
-		if strings.HasPrefix(content, "load_knowledge ") {
-			path := strings.TrimPrefix(content, "load_knowledge ")
-			err := internal.LoadKnowledge(path, mem)
-			if err != nil {
-				fmt.Println("⚠️ Ошибка загрузки:", err)
-			}
-			continue
-		}
-
-		if strings.HasPrefix(content, "load_profile ") {
-			parts := strings.Split(content, " ")
-			if len(parts) >= 3 {
-				path := parts[1]
-				license := parts[2]
-				err := internal.LoadKnowledgeLicensed(path, license, mem)
-				if err != nil {
-					fmt.Println("⚠️ Ошибка профиля:", err)
-				}
-			}
-			continue
-		}
-
-		if content == "phantoms" || content == "phantom-tree" {
-			internal.PrintPhantomTree(mem)
-			continue
-		}
-
-		if content == "decay-log" {
-			decay.PrintDecayLog()
-			continue
-		}
-
-		if content == "evolve" {
-			evolution.EvolveAll()
-			continue
-		}
-
-		// 🚀 Генерация основного сигнала
-		signal := core.Signal{
+		sig := core.Signal{
 			ID:        fmt.Sprintf("sig_%d", time.Now().UnixNano()),
-			Content:   content,
+			Content:   input,
 			Tags:      []string{"user"},
-			Timestamp: time.Now(),
-			Phase:     0.85,
+			Type:      "user",
+			Origin:    "cli",
+			Phase:     0.75,
 			Weight:    1.0,
-			Origin:    "user",
+			Timestamp: time.Now(),
 		}
 
-		reflex.React(signal)
-		emotionEngine.React(signal)
-		reaction := signalEngine.ProcessSignal(signal)
-
-		ghostField.Propagate(signal)
-		phantom.TriggerFromMatch(signal)
-		suggestor.SuggestFromQBits()
-		mem.DecayQBits()
-		decay.RunDecayCheck()
-		evolution.EvolveAll()
-
-		// 📡 сенсорная фильтрация через SignalDictionary
-		tokens := strings.Fields(strings.ToLower(content))
-		for _, token := range tokens {
-			vb := signalDict.FindMatch(token)
-			if vb != nil {
-				allowed := false
-				for _, tag := range vb.Tags {
-					if strings.HasPrefix(tag, "letter") || strings.HasPrefix(tag, "number") || strings.HasPrefix(tag, "image") {
-						allowed = true
-						break
-					}
-				}
-				if allowed {
-					mem.Broadcast(vb.QBit)
-				}
-			}
-		}
-
-		instincts := instinctEngine.Tick(time.Now(), content)
-		for _, inst := range instincts {
-			fmt.Println("[Instinct] Triggered:", inst)
-			sig := core.Signal{
-				ID:        fmt.Sprintf("inst_%d", time.Now().UnixNano()),
-				Content:   inst,
-				Tags:      []string{"instinct"},
-				Timestamp: time.Now(),
-				Phase:     0.9,
-				Weight:    1.2,
-				Origin:    "system",
-			}
-			signalEngine.ProcessSignal(sig)
-			ghostField.Propagate(sig)
-			phantom.TriggerFromMatch(sig)
-		}
-
-		predictor := core.NewPredictionEngine()
-		if predicted, ok := predictor.Predict(content); ok {
-			fmt.Println("[⏳ Prediction] Phantom may be:", predicted)
-			signalEngine.ProcessSignal(core.Signal{
-				ID:        fmt.Sprintf("pred_%d", time.Now().UnixNano()),
-				Content:   predicted,
-				Type:      "prediction",
-				Tags:      []string{"predict"},
-				Timestamp: time.Now(),
-				Phase:     0.92,
-				Weight:    1.1,
-				Origin:    "system",
-			})
-		}
-
-		fmt.Println("←", reaction.Response)
-		fmt.Println("↪ Tags:", reaction.Tags)
+		engine.ProcessSignal(sig)
+		ghost.Propagate(sig)
+		phantom.TriggerFromMatch(sig)
 	}
 }

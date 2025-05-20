@@ -2,6 +2,8 @@ package core
 
 import (
 	"strings"
+	"fmt"
+	"time"
 )
 
 type StandardBlock struct {
@@ -65,4 +67,30 @@ func GetStandardByID(id string) *StandardBlock {
 		}
 	}
 	return nil
+}
+
+// 🚀 TriggerStandard возбуждает стандарт как задачу (трансляция в поле)
+func TriggerStandard(stdID string, se *SignalEngine, gf *GhostField, pe FanthomInterface) {
+	std := GetStandardByID(stdID)
+	if std == nil {
+		fmt.Println("[StandardTrigger] ❌ Not found:", stdID)
+		return
+	}
+
+	sig := Signal{
+		ID:        "std_" + std.ID,
+		Content:   strings.Join(std.Keywords, " "),
+		Tags:      append([]string{"standard", std.ID}, std.Keywords...),
+		Phase:     std.Priority,
+		Weight:    std.Priority * 1.0,
+		Origin:    "standard_trigger",
+		Type:      "mission",
+		Timestamp: time.Now(),
+	}
+
+	se.ProcessSignal(sig)
+	gf.Propagate(sig)
+	pe.TriggerFromMatch(sig)
+
+	fmt.Println("[StandardTrigger] 🚩 Broadcasted:", std.ID)
 }

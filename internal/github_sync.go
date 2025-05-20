@@ -3,12 +3,12 @@ package internal
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
 	"time"
 
 	"ara-node/core"
 	"github.com/vmihailenco/msgpack/v5"
-	"os"
 )
 
 const (
@@ -24,9 +24,6 @@ func PushMemory(mem *core.MemoryEngine) error {
 		return err
 	}
 	defer file.Close()
-
-		mem.Mu.Lock()
-	defer mem.Mu.Unlock()
 
 	enc := msgpack.NewEncoder(file)
 	err = enc.Encode(mem.QBits)
@@ -59,7 +56,9 @@ func PullMemory(mem *core.MemoryEngine) error {
 		return err
 	}
 
-	mem.Merge(remote)
+	remoteMem := &core.MemoryEngine{QBits: remote}
+	mem.Merge(remoteMem)
+
 	fmt.Println("[GitSync] ✅ Memory pulled and merged.")
 	return nil
 }

@@ -2,95 +2,74 @@ package core
 
 import (
 	"fmt"
-	"strings"
+	
 	"time"
 )
 
-// Intent — внутренняя цель агента
-type Intent struct {
-	Tag     string
-	Phase   float64
-	Urgency float64
-}
-
 // WillEngine — движок воли агента
+// Отслеживает сигналы пользователя и проверяет соответствие миссии
+// Генерирует волевые сигналы при совпадении с эталонами
+
 type WillEngine struct {
-	Memory    *MemoryEngine
-	Delay     time.Duration
-	Active    bool
-	lastTried map[string]time.Time
+	Memory *MemoryEngine
+	Engine *SignalEngine
+	Ghost  *GhostField
+	Fantom FanthomInterface
 }
 
-// NewWillEngine — создать движок воли
-func NewWillEngine(mem *MemoryEngine) *WillEngine {
+func NewWillEngine(mem *MemoryEngine, eng *SignalEngine, gf *GhostField, f FanthomInterface) *WillEngine {
 	return &WillEngine{
-		Memory:    mem,
-		Delay:     8 * time.Second,
-		Active:    true,
-		lastTried: make(map[string]time.Time),
+		Memory: mem,
+		Engine: eng,
+		Ghost:  gf,
+		Fantom: f,
 	}
 }
 
-// isAlignedWithStandards — сравнение с эталонными блоками
-func isAlignedWithStandards(content string) bool {
-	for _, std := range StandardLibrary {
-		for _, kw := range std.Keywords {
-			if strings.Contains(strings.ToLower(content), strings.ToLower(kw)) {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-// DesireLoop — постоянный фон для самозапуска
 func (we *WillEngine) DesireLoop() {
 	go func() {
-		for we.Active {
-			time.Sleep(we.Delay)
-
-			now := time.Now()
-			intent := Intent{Tag: "user", Phase: 0.85, Urgency: 1.0}
-			qbits := we.Memory.FindByTag(intent.Tag)
-
-			for _, q := range qbits {
-				if q.Archived || q.Phase < intent.Phase {
+		delay := 5 * time.Second
+		for {
+			candidates := we.Memory.FindByTag("user")
+			for _, q := range candidates {
+				if q.Phase < 0.85 {
 					continue
 				}
-
-				// задержка между сверками
-				if t, seen := we.lastTried[q.ID]; seen && now.Sub(t) < we.Delay {
+				if q.AgeFrame() == "emergent" || q.AgeFrame() == "legacy" {
 					continue
 				}
-				we.lastTried[q.ID] = now
-
 				if isAlignedWithStandards(q.Content) {
-					fmt.Println("[WillEngine] ⚡ Intent triggered:", q.ID)
+					fmt.Println("[WillEngine] ✅ Accepted:", q.ID)
+
 					sig := Signal{
 						ID:        fmt.Sprintf("will_%d", time.Now().UnixNano()),
-						Content:   "[WILL] " + q.Content,
-						Tags:      []string{"phantom"},
-						Timestamp: now,
+						Content:   q.Content,
+						Tags:      append(q.Tags, "will", "intent"),
+						Type:      "will",
+						Origin:    "internal",
 						Phase:     q.Phase,
 						Weight:    q.Weight,
-						Origin:    "will",
+						Timestamp: time.Now(),
 					}
-					fmt.Println("←", sig.Content)
-					we.Delay = 8 * time.Second
+
+					we.Engine.ProcessSignal(sig)
+					we.Ghost.Propagate(sig)
+					we.Fantom.TriggerFromMatch(sig)
 				} else {
 					fmt.Println("[WillEngine] ❌ Rejected:", q.ID)
-					we.Memory.AdjustWeight(q.ID, -0.2)
-					adjusted := we.Memory.QBits[q.ID]
-					if adjusted.Weight < 0.1 {
-						we.Memory.AddTag(q.ID, "archived")
-						fmt.Println("[WillEngine] 🗃 Archived:", q.ID)
+					q.Weight *= 0.9
+					if q.Weight < 0.4 {
+						q.Archived = true
 					}
-					we.Delay *= 2
-					if we.Delay > 120*time.Second {
-						we.Delay = 120 * time.Second
-					}
+					we.Memory.UpdateQBit(q)
 				}
 			}
+			time.Sleep(delay)
 		}
 	}()
+}
+
+func isAlignedWithStandards(content string) bool {
+	id, _, score := MatchWithStandards(content)
+	return id != "" && score >= 3
 }

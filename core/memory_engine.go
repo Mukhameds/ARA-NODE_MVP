@@ -2,216 +2,175 @@ package core
 
 import (
 	"fmt"
+	"sort"
 	"sync"
 	"time"
 )
 
-// MemoryEngine — сигнальная память агента
+// MemoryEngine — сигнальное хранилище ARA
 type MemoryEngine struct {
 	QBits       map[string]QBit
-	Mu          sync.Mutex
 	PhantomTree []PhantomLog
+	mutex       sync.Mutex
 }
 
-// NewMemoryEngine — инициализация памяти
 func NewMemoryEngine() *MemoryEngine {
 	return &MemoryEngine{
-		QBits: make(map[string]QBit),
+		QBits:       make(map[string]QBit),
+		PhantomTree: []PhantomLog{},
 	}
 }
 
-// StoreQBit — сохранить QBit в память
-func (m *MemoryEngine) StoreQBit(q QBit) {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
+func (m *MemoryEngine) CreateQBit(content string) *QBit {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	q := QBit{
+		ID:           fmt.Sprintf("qbit_%d", time.Now().UnixNano()),
+		Content:      content,
+		CreatedAt:    time.Now(),
+		LastAccessed: time.Now(),
+		Phase:        0.7,
+		Weight:       1.0,
+		Tags:         []string{},
+		Type:         "",
+	}
 	m.QBits[q.ID] = q
-	fmt.Println("[MemoryEngine] Stored QBit:", q.ID)
+	return &q
 }
 
-// GetQBit — получить QBit по ID
-func (m *MemoryEngine) GetQBit(id string) (QBit, bool) {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-	q, exists := m.QBits[id]
-	return q, exists
+func (m *MemoryEngine) StoreQBit(q QBit) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	q.LastAccessed = time.Now()
+	m.QBits[q.ID] = q
 }
 
-// DeleteQBit — удалить QBit по ID
-func (m *MemoryEngine) DeleteQBit(id string) {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-	if _, exists := m.QBits[id]; exists {
-		delete(m.QBits, id)
-		fmt.Println("[MemoryEngine] ❌ QBit deleted:", id)
-	}
+func (m *MemoryEngine) UpdateQBit(q QBit) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	q.LastAccessed = time.Now()
+	m.QBits[q.ID] = q
 }
 
-// DecayQBits — уменьшает вес старых или слабых QBit
-func (m *MemoryEngine) DecayQBits() {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-
-	now := time.Now()
-	for id, q := range m.QBits {
-		age := now.Sub(q.CreatedAt).Seconds()
-		decayFactor := 0.5 * age
-		q.Weight -= decayFactor
-		if q.Weight < 0 {
-			q.Weight = 0
-		}
-		if q.Weight < 0.2 {
-			q.Archived = true
-		}
-		fmt.Printf("[Decay] %s → age: %.1fs, decay: %.2f, new weight: %.2f\n", id, age, decayFactor, q.Weight)
-		m.QBits[id] = q
-	}
-}
-
-// FindByTag — вернуть QBit по тегу
 func (m *MemoryEngine) FindByTag(tag string) []QBit {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-
-	var result []QBit
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	results := []QBit{}
 	for _, q := range m.QBits {
-		if q.Archived {
-			continue
-		}
-		for _, t := range q.Tags {
-			if t == tag {
-				result = append(result, q)
-				break
-			}
+		if Contains(q.Tags, tag) {
+			q.LastAccessed = time.Now()
+			results = append(results, q)
 		}
 	}
-	return result
+	return results
 }
 
-// FindByPhase — вернуть QBit с близкой фазой
-func (m *MemoryEngine) FindByPhase(target float64, tolerance float64) []QBit {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-
-	var result []QBit
+func (m *MemoryEngine) FindByPhase(phase float64, tolerance float64) []QBit {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	results := []QBit{}
 	for _, q := range m.QBits {
-		if q.Archived {
-			continue
-		}
-		if abs(q.Phase-target) <= tolerance {
-			result = append(result, q)
+		if PhaseClose(q.Phase, phase, tolerance) {
+			q.LastAccessed = time.Now()
+			results = append(results, q)
 		}
 	}
-	return result
+	return results
 }
 
-func abs(f float64) float64 {
-	if f < 0 {
-		return -f
+func (m *MemoryEngine) FindTopRelevant(tag string, minPhase float64) []QBit {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	var filtered []QBit
+	for _, q := range m.QBits {
+		if Contains(q.Tags, tag) && q.Phase >= minPhase {
+			filtered = append(filtered, q)
+		}
 	}
-	return f
+	sort.SliceStable(filtered, func(i, j int) bool {
+		return filtered[i].Weight*filtered[i].Phase > filtered[j].Weight*filtered[j].Phase
+	})
+	return filtered
 }
 
-// ListQBits — выводит все неархивированные QBit
-func (m *MemoryEngine) ListQBits() {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-
-	fmt.Println("\n[Memory Dump]")
+func (m *MemoryEngine) FindAll(filter func(q QBit) bool) []QBit {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	var all []QBit
 	for _, q := range m.QBits {
-		if q.Archived {
-			continue
+		if filter(q) {
+			q.LastAccessed = time.Now()
+			all = append(all, q)
 		}
-		fmt.Printf("• ID: %s | Phase: %.2f | Weight: %.2f | Tags: %v\n", q.ID, q.Phase, q.Weight, q.Tags)
 	}
+	return all
 }
 
 func (m *MemoryEngine) AdjustWeight(id string, delta float64) {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-	q, exists := m.QBits[id]
-	if !exists || q.Archived {
-		return
-	}
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	q := m.QBits[id]
 	q.Weight += delta
 	if q.Weight < 0 {
 		q.Weight = 0
 	}
+	q.LastAccessed = time.Now()
 	m.QBits[id] = q
 }
 
-func (m *MemoryEngine) AddTag(id string, tag string) {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-	q, exists := m.QBits[id]
-	if !exists || q.Archived {
-		return
+func (m *MemoryEngine) AddTag(id, tag string) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	q := m.QBits[id]
+	if !Contains(q.Tags, tag) {
+		q.Tags = append(q.Tags, tag)
 	}
-	for _, t := range q.Tags {
-		if t == tag {
-			return
+	m.QBits[id] = q
+}
+
+func (m *MemoryEngine) DeleteQBit(id string) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	delete(m.QBits, id)
+}
+
+func (m *MemoryEngine) DecayQBits() {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	now := time.Now()
+	for id, q := range m.QBits {
+		if q.Type == "standard" || Contains(q.Tags, "instinct") {
+			continue
 		}
-	}
-	q.Tags = append(q.Tags, tag)
-	m.QBits[id] = q
-}
-
-func (m *MemoryEngine) Merge(other map[string]QBit) {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-	for id, q := range other {
-		if _, exists := m.QBits[id]; !exists {
+		age := now.Sub(q.LastAccessed).Seconds()
+		decay := 1.0 - (age / 1800.0) // затухает за 30 минут
+		if decay < 0.5 {
+			q.Weight *= decay
+			if q.Weight < 0.05 {
+				delete(m.QBits, id)
+				continue
+			}
 			m.QBits[id] = q
 		}
 	}
 }
 
-// CreateQBit — создать и сохранить новый QBit
-func (m *MemoryEngine) CreateQBit(content string) *QBit {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-
-	q := QBit{
-		ID:        fmt.Sprintf("qbit_%d", time.Now().UnixNano()),
-		Content:   content,
-		Tags:      []string{"auto"},
-		CreatedAt: time.Now(),
-		Phase:     0.75,
-		Weight:    1.0,
-	}
-
-	m.QBits[q.ID] = q
-	fmt.Println("[MemoryEngine] Auto-created QBit:", q.ID)
-	return &q
-}
-
-// Broadcast — возбуждает QBit во всей памяти (прямая трансляция)
-func (m *MemoryEngine) Broadcast(q *QBit) {
-	if q == nil {
-		return
-	}
-	m.StoreQBit(*q)
-	fmt.Println("[MemoryEngine] 📡 Broadcast QBit:", q.ID)
-}
-
-// FindAll — вернуть все QBits, удовлетворяющие фильтру
-func (m *MemoryEngine) FindAll(filter func(QBit) bool) []QBit {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-
-	var result []QBit
+func (m *MemoryEngine) ListQBits() {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	fmt.Println("\n🧠 Current Memory:")
 	for _, q := range m.QBits {
-		if filter(q) {
-			result = append(result, q)
+		fmt.Printf("%s | %.2f | %s | Tags: %v\n", q.ID, q.Phase, q.Content, q.Tags)
+	}
+}
+
+func (m *MemoryEngine) Merge(other *MemoryEngine) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	for id, q := range other.QBits {
+		if _, exists := m.QBits[id]; !exists {
+			m.QBits[id] = q
 		}
 	}
-	return result
-}
-
-func (m *MemoryEngine) UpdateQBit(qbit QBit) {
-	m.Mu.Lock()
-	defer m.Mu.Unlock()
-
-	if _, exists := m.QBits[qbit.ID]; exists {
-		m.QBits[qbit.ID] = qbit
-	}
+	fmt.Println("[MemoryEngine] ✅ Merged external memory:", len(other.QBits), "entries")
 }

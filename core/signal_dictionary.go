@@ -92,3 +92,13 @@ func (sd *SignalDictionary) All() []*VariableBlock {
 	}
 	return out
 }
+
+// LearnFromInput — разбивает строку на токены и обучает словарь
+func (sd *SignalDictionary) LearnFromInput(input string) {
+	tokens := strings.Fields(input)
+	for _, tok := range tokens {
+		if sd.FindMatch(tok) == nil {
+			sd.AutoLearn(tok)
+		}
+	}
+}

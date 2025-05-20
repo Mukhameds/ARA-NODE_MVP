@@ -2,51 +2,70 @@ package core
 
 import (
 	"fmt"
+	
 	"time"
 )
 
 
-// SignalEngine — обрабатывает входящие сигналы и вызывает реакцию
+
+// SignalEngine — обрабатывает входящие сигналы и записывает их в память,
+// а также транслирует их по всей реактивной архитектуре (через GhostField).
 type SignalEngine struct {
 	Memory *MemoryEngine
+	Ghost  *GhostField
 }
 
-func NewSignalEngine(mem *MemoryEngine) *SignalEngine {
-	return &SignalEngine{Memory: mem}
+// NewSignalEngine — инициализация ядра обработки сигналов
+func NewSignalEngine(mem *MemoryEngine, ghost *GhostField) *SignalEngine {
+	return &SignalEngine{
+		Memory: mem,
+		Ghost:  ghost,
+	}
 }
 
-// ProcessSignal — основной метод приёма и реакции
+// ProcessSignal — принимает сигнал, сохраняет как QBit, запускает реакцию
 func (se *SignalEngine) ProcessSignal(sig Signal) Reaction {
 	fmt.Println("[SignalEngine] Received:", sig.Content)
 
-	// Сохраняем сигнал как QBit
 	qbit := QBit{
-		ID:        "qbit_" + sig.ID,
-		Content:   sig.Content,
-		Tags:      sig.Tags,
-		CreatedAt: time.Now(),
-		Weight:    sig.Weight,
-		Phase:     sig.Phase,
-		Type:      sig.Type,
-		Origin:    sig.Origin,
+		ID:           "qbit_" + sig.ID,
+		Content:      sig.Content,
+		Tags:         sig.Tags,
+		CreatedAt:    time.Now(),
+		LastAccessed: time.Now(),
+		Weight:       sig.Weight,
+		Phase:        sig.Phase,
+		Type:         sig.Type,
+		Origin:       sig.Origin,
 	}
 	se.Memory.StoreQBit(qbit)
 
-	// Проверка совпадения по фазе (заглушка)
-	if sig.Phase > 0.8 {
-		return Reaction{
-			TriggeredBy: sig.ID,
-			Response:    "Phantom triggered by phase match",
-			Tags:        []string{"phantom"},
-			Confidence:  0.95,
-		}
+	// Транслируем сигнал во всё поле
+	if se.Ghost != nil {
+		se.Ghost.Propagate(sig)
 	}
 
-	// Обычная реакция
+	// Формируем реакцию по локальной памяти
+	conf := 0.5
+	tags := []string{"ack"}
+
+	if sig.Phase > 0.85 {
+		conf += 0.2
+		tags = append(tags, "high_phase")
+	}
+	if sig.Origin == "will" || sig.Type == "phantom" {
+		conf += 0.1
+		tags = append(tags, "internal")
+	}
+	if matches := se.Memory.FindByPhase(sig.Phase, 0.03); len(matches) >= 2 {
+		conf += 0.1
+		tags = append(tags, "resonance")
+	}
+
 	return Reaction{
 		TriggeredBy: sig.ID,
-		Response:    "Signal processed and stored",
-		Tags:        []string{"ack"},
-		Confidence:  0.8,
+		Response:    "Signal dispatched to memory and network",
+		Tags:        tags,
+		Confidence:  conf,
 	}
 }

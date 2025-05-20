@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"strings"
-	
 
 	"ara-node/core"
 )
@@ -20,28 +19,48 @@ func NewSuggestorEngine(mem *core.MemoryEngine) *SuggestorEngine {
 
 // SuggestFromQBits — ищет цепочки и предлагает мысль
 func (s *SuggestorEngine) SuggestFromQBits() {
-	// Ищем последние QBits с нужными тегами
 	relevant := s.FindRecentRelevant(50)
-	if len(relevant) < 3 {
+	filtered := []core.QBit{}
+
+	// Фильтрация по зрелости и фазе
+	for _, q := range relevant {
+		age := q.AgeFrame()
+		if age == "emergent" || age == "legacy" {
+			continue
+		}
+		if q.Phase < 0.5 {
+			continue
+		}
+		filtered = append(filtered, q)
+	}
+
+	if len(filtered) < 3 {
 		return
 	}
 
-	// Группировка по похожести
-	groups := groupBySimilarity(relevant)
+	groups := groupBySimilarity(filtered)
 	for _, group := range groups {
 		if len(group) < 3 {
 			continue
 		}
 
 		idea := mergeSummary(group)
+		signalMass := 0.0
+		for _, q := range group {
+			signalMass += q.Weight * q.Phase
+		}
+
+		if signalMass < 2.0 {
+			continue
+		}
+
 		fmt.Println("[Suggestor] 💡", idea)
 
-		// Также можно создать фантом как мысль
 		q := s.Memory.CreateQBit("[suggestion] " + idea)
-		q.Tags = []string{"suggestion", "phantom"}
+		q.Tags = []string{"suggestion", "phantom", "standard_candidate"}
 		q.Type = "phantom"
 		q.Phase = group[0].Phase
-		q.Weight = 1.2
+		q.Weight = signalMass / float64(len(group))
 		s.Memory.StoreQBit(*q)
 	}
 }
