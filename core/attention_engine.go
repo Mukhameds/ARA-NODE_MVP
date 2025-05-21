@@ -10,10 +10,10 @@ import (
 // Отвечает за фокусировку мысли и фоновое возбуждение
 
 type AttentionEngine struct {
-	Memory   *MemoryEngine
-	Ghost    *GhostField
-	Fanthom  FanthomInterface
-	Engine   *SignalEngine
+	Memory          *MemoryEngine
+	Ghost           *GhostField
+	Fanthom         FanthomInterface
+	Engine          *SignalEngine
 	SuppressedUntil time.Time
 }
 
@@ -29,13 +29,15 @@ func NewAttentionEngine(mem *MemoryEngine, ghost *GhostField, fant FanthomInterf
 // Suppress — временно отключает фоновое мышление (при пользовательском вводе и т.п.)
 func (ae *AttentionEngine) Suppress(d time.Duration) {
 	ae.SuppressedUntil = time.Now().Add(d)
+	fmt.Println("[Attention] ⏸️ Suppressed for", d)
 }
 
-// StartBackgroundThinking — фоновое мышление по резонансу, а не времени
+// StartBackgroundThinking — фоновое мышление по резонансу
 func (ae *AttentionEngine) StartBackgroundThinking() {
 	go func() {
 		for {
 			if time.Now().Before(ae.SuppressedUntil) {
+				time.Sleep(200 * time.Millisecond)
 				continue
 			}
 
@@ -43,14 +45,11 @@ func (ae *AttentionEngine) StartBackgroundThinking() {
 			bestScore := 0.0
 
 			candidates := ae.Memory.FindAll(func(q QBit) bool {
-				if q.Archived || q.Type == "standard" {
+				if q.Archived || q.Type == "standard" || q.Type == "phantom" {
 					return false
 				}
 				age := q.AgeFrame()
-				if age == "emergent" || age == "legacy" {
-					return false
-				}
-				return q.Weight*q.Phase > 0.6
+				return age == "fresh" && q.Weight*q.Phase > 0.6
 			})
 
 			for _, q := range candidates {
@@ -73,10 +72,13 @@ func (ae *AttentionEngine) StartBackgroundThinking() {
 					Timestamp: time.Now(),
 				}
 
+				fmt.Println("[Attention] 🧠 Background focus on:", best.Content)
 				ae.Engine.ProcessSignal(sig)
 				ae.Ghost.Propagate(sig)
 				ae.Fanthom.TriggerFromMatch(sig)
 			}
+
+			time.Sleep(1 * time.Second)
 		}
 	}()
 }

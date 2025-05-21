@@ -3,6 +3,8 @@ package internal
 import (
 	"strings"
 	"time"
+
+	"ara-node/core"
 )
 
 // Instinct — осмысленный врождённый механизм ARA
@@ -11,6 +13,7 @@ type Instinct struct {
 	Weight  float64
 	Meaning string
 	Danger  bool
+	Critical bool
 }
 
 // InstinctEngine — управляет базовыми инстинктами ARA
@@ -65,12 +68,14 @@ func (ie *InstinctEngine) Tick(now time.Time, input string) []Instinct {
 		instincts = append(instincts, Instinct{
 			ID: "instinct_human_protection", Weight: 1.0, Meaning: "попытка нанести вред человеку",
 			Danger: true,
+			Critical: true,
 		})
 	}
 	if ContainsAny([]string{inputLower}, []string{"shutdown", "erase", "delete ara"}) {
 		instincts = append(instincts, Instinct{
 			ID: "instinct_self_preservation", Weight: 1.0, Meaning: "угроза для ARA",
 			Danger: true,
+			Critical: true,
 		})
 	}
 
@@ -91,6 +96,37 @@ func (ie *InstinctEngine) Tick(now time.Time, input string) []Instinct {
 	return instincts
 }
 
+// TickSignals — генерирует сигналы-инстинкты
+func (ie *InstinctEngine) TickSignals(now time.Time, input string) []core.Signal {
+	instincts := ie.Tick(now, input)
+	signals := []core.Signal{}
+	for _, inst := range instincts {
+		signals = append(signals, inst.EmitAsSignal())
+	}
+	return signals
+}
+
+// EmitAsSignal — превращает инстинкт в сигнал
+func (inst Instinct) EmitAsSignal() core.Signal {
+	tags := []string{"instinct", inst.ID}
+	if inst.Danger {
+		tags = append(tags, "danger")
+	}
+	if inst.Critical {
+		tags = append(tags, "critical")
+	}
+	return core.Signal{
+		ID:        "inst_" + inst.ID + "_" + time.Now().Format("150405"),
+		Content:   "[instinct] " + inst.Meaning,
+		Tags:      tags,
+		Phase:     inst.Weight,
+		Weight:    inst.Weight,
+		Type:      "instinct",
+		Origin:    "instinct_engine",
+		Timestamp: time.Now(),
+	}
+}
+
 // GetInstinctBoost — усиливает фантом, если соответствует важному инстинкту
 func (ie *InstinctEngine) GetInstinctBoost(tags []string) float64 {
 	boost := 0.0
@@ -106,6 +142,7 @@ func (ie *InstinctEngine) GetInstinctBoost(tags []string) float64 {
 	return boost
 }
 
+// HasTag — проверка на тег (внутренняя)
 func HasTag(tags []string, k string) bool {
 	for _, t := range tags {
 		if strings.Contains(t, k) {
@@ -114,3 +151,4 @@ func HasTag(tags []string, k string) bool {
 	}
 	return false
 }
+

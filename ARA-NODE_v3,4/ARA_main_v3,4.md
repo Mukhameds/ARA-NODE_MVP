@@ -1,3 +1,10 @@
+
+---
+
+"C:\Documents\ARA-NODE_mvp\cmd\main.go"
+
+---
+
 package main
 
 import (
@@ -28,8 +35,6 @@ func main() {
 	prediction := internal.NewPredictionEngine(mem, nil, nil)
 	reflex := core.NewReflexEngine()
 	will := core.NewWillEngine(mem, nil, nil, phantom)
-	resonance := core.NewResonanceMatrix()
-	shutdown := core.NewShutdownEngine(0.4, 2*time.Second)
 
 	// === GHOST FIELD ===
 	ghost := core.NewGhostField()
@@ -86,37 +91,12 @@ func main() {
 		}
 	}()
 
-	go func() {
-		for {
-			time.Sleep(15 * time.Second)
-			resonance.Decay()
-		}
-	}()
-
-	go func() {
-		for {
-			time.Sleep(5 * time.Second)
-			currentMass := mem.EstimateTotalPhase()
-			shutdown.UpdateMass(currentMass)
-		}
-	}()
-
 	attention := core.NewAttentionEngine(mem, ghost, phantom, engine)
 	attention.StartBackgroundThinking()
 	will.DesireLoop()
 
-	// === WORD FORMATION ENGINE ===
-	wordEngine := internal.NewWordFormationEngine(dict, mem)
-
-	go func() {
-		for {
-			time.Sleep(3 * time.Second)
-			wordEngine.Tick()
-			wordEngine.Decay()
-		}
-	}()
-
 	// === CLI LOOP ===
+		// === CLI LOOP ===
 	for {
 		var input string
 		fmt.Print("> ")
@@ -133,7 +113,7 @@ func main() {
 		}
 
 		if input == "help" {
-			fmt.Println("🆘 Команды:\n- help\n- view\n- view emotions\n- delete <qbit_id>\n- sync\n- loadfacts\n- exit")
+			fmt.Println("🆘 Команды:\n- help\n- view\n- view emotions\n- delete <qbit_id>\n- sync\n- exit")
 			continue
 		}
 
@@ -152,16 +132,7 @@ func main() {
 
 		if input == "sync" {
 			fmt.Println("[Sync] 🔄 Запуск синхронизации (заглушка)...")
-			continue
-		}
-
-		if input == "loadfacts" {
-			err := internal.LoadFactsFromFile("data/core_knowledge.json", engine, ghost)
-			if err != nil {
-				fmt.Println("❌ Ошибка загрузки фактов:", err)
-			} else {
-				fmt.Println("📚 Факты успешно загружены.")
-			}
+			// здесь позже будет: go internal.GitHubSync(mem)
 			continue
 		}
 
@@ -187,9 +158,45 @@ func main() {
 		engine.ProcessSignal(sig)
 		ghost.Propagate(sig)
 		phantom.TriggerFromMatch(sig)
-
-		matched := mem.FindByTag("user")
-		resonance.BoostBySignal(sig, matched)
-		resonance.Print(sig.ID)
 	}
 }
+
+---
+
+---
+
+"C:\Documents\ARA-NODE_mvp\config\manifest.go"
+
+---
+
+package config
+
+import (
+	"time"
+	"fmt"
+)
+
+// SelfKernel — неизменяемая основа идентичности агента
+type SelfKernel struct {
+	AgentID     string
+	ArchitectID string
+	CoreMission string
+	Inception   time.Time
+}
+
+// InitSelfKernel — инициализация ядра
+func InitSelfKernel() *SelfKernel {
+	kernel := &SelfKernel{
+		AgentID:     "ARA::node::001",
+		ArchitectID: "User::Architect",
+		CoreMission: "Amplify and assist user cognition through signal logic.",
+		Inception:   time.Now(),
+	}
+	fmt.Println("[SelfKernel] Initialized:", kernel.AgentID)
+	return kernel
+}
+
+
+---
+
+---

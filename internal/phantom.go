@@ -101,6 +101,14 @@ func (pe *PhantomEngine) GeneratePhantomChain(chain []core.QBit) {
 
 	summary = strings.TrimSuffix(summary, " + ")
 
+
+	// Защита от повторной генерации фантома с тем же содержанием
+if pe.Memory.ExistsQBit("[phantom] "+summary, chain[0].Phase, 0.01) {
+	fmt.Println("[PhantomEngine] ⚠️ Phantom already exists — skip")
+	return
+}
+
+
 	if strings.Count(summary, "[phantom]") > 1 {
 		fmt.Println("[PhantomEngine] ❌ Phantom self-reference detected, abort")
 		return

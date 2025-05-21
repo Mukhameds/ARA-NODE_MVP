@@ -17,21 +17,24 @@ type PredictionRule struct {
 
 // PredictionEngine — реактивный генератор предсказаний
 type PredictionEngine struct {
-	Memory  *core.MemoryEngine
-	Rules   []PredictionRule
-	Engine  *core.SignalEngine
-	Ghost   *core.GhostField
-	Enabled bool
+	Memory          *core.MemoryEngine
+	Rules           []PredictionRule
+	Engine          *core.SignalEngine
+	Ghost           *core.GhostField
+	Enabled         bool
+	LastPredictions map[string]time.Time
+	Pause           time.Duration
 }
 
 func NewPredictionEngine(mem *core.MemoryEngine, eng *core.SignalEngine, ghost *core.GhostField) *PredictionEngine {
 	return &PredictionEngine{
-		Memory:  mem,
-		Engine:  eng,
-		Ghost:   ghost,
-		Enabled: true,
+		Memory:          mem,
+		Engine:          eng,
+		Ghost:           ghost,
+		Enabled:         true,
+		LastPredictions: make(map[string]time.Time),
+		Pause:           5 * time.Second,
 		Rules: []PredictionRule{
-			// Пример правила: если есть тег "user" с фазой >= 0.6, предсказать "followup"
 			{IfTag: "user", ThenContent: "followup", MinPhase: 0.6, Confidence: 0.8},
 		},
 	}
@@ -43,19 +46,27 @@ func (pe *PredictionEngine) Tick() {
 		return
 	}
 
+	now := time.Now()
+
 	for _, rule := range pe.Rules {
 		candidates := pe.Memory.FindTopRelevant(rule.IfTag, rule.MinPhase)
 		if len(candidates) == 0 {
 			continue
 		}
 
-		// Возьмём лучший кандидат
 		best := candidates[0]
 		confidence := rule.Confidence * best.Weight * best.Phase
 
 		if confidence < 0.5 {
-			continue // слишком низкая уверенность
+			continue
 		}
+
+		// Спам-фильтр: не предсказывать одно и то же слишком часто
+		lastTime, seen := pe.LastPredictions[rule.ThenContent]
+		if seen && now.Sub(lastTime) < pe.Pause {
+			continue
+		}
+		pe.LastPredictions[rule.ThenContent] = now
 
 		sig := core.Signal{
 			ID:        fmt.Sprintf("pred_%d", time.Now().UnixNano()),
@@ -68,7 +79,7 @@ func (pe *PredictionEngine) Tick() {
 			Timestamp: time.Now(),
 		}
 
-		fmt.Printf("[PredictionEngine] 🔮 Predict: '%s' with confidence %.2f\n", sig.Content, confidence)
+		fmt.Printf("[PredictionEngine] 🔮 Predict: '%s' (from %s) with confidence %.2f\n", sig.Content, best.ID, confidence)
 
 		pe.Engine.ProcessSignal(sig)
 		pe.Ghost.Propagate(sig)

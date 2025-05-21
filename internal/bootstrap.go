@@ -2,15 +2,33 @@ package internal
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"ara-node/core"
 )
 
+type UserProfile struct {
+	Goal       string
+	Interest   string
+	Help       string
+	Role       string
+	Difficulty string
+	Block      string
+	CreatedAt  time.Time
+}
+
 // RunBootstrap инициализирует цели и мышление пользователя
 func RunBootstrap(mem *core.MemoryEngine, dict *core.SignalDictionary) {
+	// проверка на повтор
+	if _, err := os.Stat("data/bootstrap_done.json"); err == nil {
+		fmt.Println("🔁 Bootstrap already completed. Skipping.")
+		return
+	}
+
 	fmt.Println("🔧 ARA Bootstrap Initialization")
 
 	reader := bufio.NewReader(os.Stdin)
@@ -60,6 +78,23 @@ func RunBootstrap(mem *core.MemoryEngine, dict *core.SignalDictionary) {
 		qw.Type = "weakness"
 		qw.Tags = []string{"user", "analysis", "bootstrap"}
 		mem.StoreQBit(*qw)
+	}
+
+	// === Сохраняем профиль в JSON ===
+	userProfile := UserProfile{
+		Goal:       goal,
+		Interest:   interest,
+		Help:       help,
+		Role:       role,
+		Difficulty: difficulty,
+		Block:      block,
+		CreatedAt:  time.Now(),
+	}
+
+	bytes, err := json.MarshalIndent(userProfile, "", "  ")
+	if err == nil {
+		os.WriteFile("data/user_profile.json", bytes, 0644)
+		os.WriteFile("data/bootstrap_done.json", []byte(`true`), 0644)
 	}
 
 	fmt.Println("✅ Bootstrap завершён.")

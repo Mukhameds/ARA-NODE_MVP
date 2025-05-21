@@ -3,8 +3,8 @@ package internal
 import (
 	"fmt"
 	"strings"
-	
 
+	 "time" 
 	"ara-node/core"
 )
 
@@ -30,7 +30,7 @@ func NewEmotionEngine(mem *core.MemoryEngine) *EmotionEngine {
 		Memory:       mem,
 		emotionState: make(map[string]float64),
 		emotionDecay: 0.98,
-		registered:  []EmotionTrigger{},
+		registered:   []EmotionTrigger{},
 	}
 }
 
@@ -58,7 +58,39 @@ func (e *EmotionEngine) React(sig core.Signal) {
 		}
 	}
 
+	// === Heuristic Backpropagation ===
+	score := core.HeuristicScore(sig.Content)
+	if score > 0.6 {
+		qbits := e.Memory.FindByTag("user")
+		e.BackPropagate(qbits, "satisfaction")
+		fmt.Println("[Emotion] 🌀 Heuristic resonance → BackPropagate (satisfaction)")
+
+		if len(qbits) >= 3 {
+			var ids []string
+			var tags []string
+			for _, q := range qbits {
+				ids = append(ids, q.ID)
+				tags = append(tags, q.Content)
+			}
+			core.SynthesizeStandardFromQBits("std_"+qbits[0].ID, tags, 0.8, "satisfaction", ids)
+		}
+	}
+
 	e.DecayEmotionStates()
+}
+
+func (e *EmotionEngine) BackPropagate(sourceQBits []core.QBit, emotion string) {
+	for _, q := range sourceQBits {
+		q.Phase += 0.1
+		q.Weight += 0.2
+		if !core.Contains(q.Tags, "emotionally_bound") {
+			q.Tags = append(q.Tags, "emotionally_bound")
+		}
+		q.LastAccessed = time.Now()
+
+		e.Memory.StoreQBit(q)
+		fmt.Printf("[EmotionBackProp] ↑ Phase/Weight for %s via %s\n", q.Content, emotion)
+	}
 }
 
 func (e *EmotionEngine) DecayEmotionStates() {
@@ -72,10 +104,18 @@ func (e *EmotionEngine) DecayEmotionStates() {
 
 func (e *EmotionEngine) CurrentEmotions() []string {
 	var active []string
-	for name := range e.emotionState {
-		active = append(active, name)
+	for name, val := range e.emotionState {
+		active = append(active, fmt.Sprintf("%s (%.2f)", name, val))
 	}
 	return active
+}
+
+func (e *EmotionEngine) PrintEmotions() {
+	fmt.Println("🧠 Active Emotions:")
+	for name, val := range e.emotionState {
+		bar := strings.Repeat("█", int(val*10))
+		fmt.Printf("• %-12s %5.2f  %s\n", name, val, bar)
+	}
 }
 
 func (e *EmotionEngine) GetPhaseBoost(tags []string) float64 {

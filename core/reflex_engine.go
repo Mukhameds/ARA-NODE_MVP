@@ -2,7 +2,7 @@ package core
 
 import (
 	"fmt"
-	
+	"time"
 )
 
 // ReflexRule — мгновенная реакция на сигнал
@@ -13,12 +13,16 @@ type ReflexRule struct {
 
 // ReflexEngine — хранит и вызывает рефлексы
 type ReflexEngine struct {
-	Rules []ReflexRule
+	Rules          []ReflexRule
+	CooldownPerTag map[string]time.Time
+	MinInterval    time.Duration
 }
 
 func NewReflexEngine() *ReflexEngine {
 	return &ReflexEngine{
-		Rules: []ReflexRule{},
+		Rules:          []ReflexRule{},
+		CooldownPerTag: make(map[string]time.Time),
+		MinInterval:    3 * time.Second,
 	}
 }
 
@@ -30,9 +34,15 @@ func (re *ReflexEngine) AddRule(tag string, action func(sig Signal)) {
 }
 
 func (re *ReflexEngine) React(sig Signal) {
+	now := time.Now()
 	for _, rule := range re.Rules {
 		if containsTag(sig.Tags, rule.MatchTag) {
+			last, exists := re.CooldownPerTag[rule.MatchTag]
+			if exists && now.Sub(last) < re.MinInterval {
+				continue // подавлено из-за частоты
+			}
 			fmt.Println("[Reflex] ⚡ Instant reaction to:", sig.Content)
+			re.CooldownPerTag[rule.MatchTag] = now
 			rule.Action(sig)
 		}
 	}
@@ -54,5 +64,8 @@ func DefaultReflexSet(re *ReflexEngine) {
 	})
 	re.AddRule("danger", func(sig Signal) {
 		fmt.Println("[Reflex] 🚨 Danger signal! Executing safety protocol...")
+	})
+	re.AddRule("fail", func(sig Signal) {
+		fmt.Println("[Reflex] 😤 Fail detected. Reacting emotionally.")
 	})
 }

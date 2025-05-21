@@ -22,7 +22,6 @@ func (s *SuggestorEngine) SuggestFromQBits() {
 	relevant := s.FindRecentRelevant(50)
 	filtered := []core.QBit{}
 
-	// Фильтрация по зрелости и фазе
 	for _, q := range relevant {
 		age := q.AgeFrame()
 		if age == "emergent" || age == "legacy" {
@@ -31,10 +30,14 @@ func (s *SuggestorEngine) SuggestFromQBits() {
 		if q.Phase < 0.5 {
 			continue
 		}
+		if q.Type == "phantom" || q.Type == "standard" || q.Archived {
+			continue
+		}
 		filtered = append(filtered, q)
 	}
 
 	if len(filtered) < 3 {
+		fmt.Println("[Suggestor] ⚠️ Not enough valid QBits for suggestion.")
 		return
 	}
 
@@ -45,16 +48,21 @@ func (s *SuggestorEngine) SuggestFromQBits() {
 		}
 
 		idea := mergeSummary(group)
+		if s.Memory.ExistsQBit("[suggestion] "+idea, group[0].Phase, 0.03) {
+			continue // уже предлагалось
+		}
+
 		signalMass := 0.0
 		for _, q := range group {
 			signalMass += q.Weight * q.Phase
 		}
 
 		if signalMass < 2.0 {
+			fmt.Printf("[Suggestor] ⛔ Signal mass too low: %.2f for: %s\n", signalMass, idea)
 			continue
 		}
 
-		fmt.Println("[Suggestor] 💡", idea)
+		fmt.Printf("[Suggestor] 💡 Suggestion: %s (mass: %.2f)\n", idea, signalMass)
 
 		q := s.Memory.CreateQBit("[suggestion] " + idea)
 		q.Tags = []string{"suggestion", "phantom", "standard_candidate"}

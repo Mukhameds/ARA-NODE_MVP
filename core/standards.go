@@ -6,33 +6,20 @@ import (
 	"time"
 )
 
+// StandardBlock — эталонная миссия, принцип или ориентир сознания
 type StandardBlock struct {
-	ID       string
-	Keywords []string
-	Priority float64
+	ID          string
+	Keywords    []string
+	Priority    float64
+	Dynamic     bool     // был ли создан системой
+	EmotionLink string   // ID эмоции или чувства, откуда он возник
+	SourceQBits []string // какие QBits его сформировали
 }
 
-// 📚 Статические эталонные блоки миссий ARA
-var StandardLibrary = []StandardBlock{
-	{
-		ID:       "mission_abundance",
-		Keywords: []string{"изобилие", "людям", "помощь", "решение проблем", "облегчить жизнь"},
-		Priority: 1.0,
-	},
-	{
-		ID:       "mission_learning",
-		Keywords: []string{"обучение", "знания", "развитие", "понимание", "объяснение"},
-		Priority: 0.9,
-	},
-	{
-		ID:       "mission_sync",
-		Keywords: []string{"синхронизация", "объединение", "p2p", "обмен"},
-		Priority: 0.8,
-	},
-}
+// 📚 Пустая библиотека эталонов — всё формируется динамически
+var StandardLibrary = []StandardBlock{}
 
-// 🔍 MatchWithStandards проверяет, соответствует ли текст какому-либо эталонному блоку
-// Возвращает: ID блока, приоритет, количество совпавших ключевых слов
+// MatchWithStandards — простой режим (оставлен для обратной совместимости)
 func MatchWithStandards(content string) (string, float64, int) {
 	content = strings.ToLower(content)
 	bestMatch := ""
@@ -59,17 +46,35 @@ func MatchWithStandards(content string) (string, float64, int) {
 	return "", 0.0, 0
 }
 
-// 🧱 GetStandardByID возвращает эталонный блок по ID
-func GetStandardByID(id string) *StandardBlock {
+// MatchWithStandardsExtended — полный блок + вес совпадения + причина
+func MatchWithStandardsExtended(content string) (*StandardBlock, float64, string) {
+	content = strings.ToLower(content)
+	var best *StandardBlock
+	bestScore := 0.0
+	reason := ""
+
 	for _, std := range StandardLibrary {
-		if std.ID == id {
-			return &std
+		matchCount := 0
+		for _, keyword := range std.Keywords {
+			if strings.Contains(content, keyword) {
+				matchCount++
+			}
+		}
+		score := float64(matchCount) * std.Priority
+		if score > bestScore {
+			bestScore = score
+			best = &std
+			reason = fmt.Sprintf("Matched %d keywords × priority %.2f", matchCount, std.Priority)
 		}
 	}
-	return nil
+
+	if bestScore >= 2.0 {
+		return best, bestScore, reason
+	}
+	return nil, 0.0, "No significant match"
 }
 
-// 🚀 TriggerStandard возбуждает стандарт как задачу (трансляция в поле)
+// TriggerStandard — возбуждает стандарт как задачу (трансляция в поле)
 func TriggerStandard(stdID string, se *SignalEngine, gf *GhostField, pe FanthomInterface) {
 	std := GetStandardByID(stdID)
 	if std == nil {
@@ -93,4 +98,41 @@ func TriggerStandard(stdID string, se *SignalEngine, gf *GhostField, pe FanthomI
 	pe.TriggerFromMatch(sig)
 
 	fmt.Println("[StandardTrigger] 🚩 Broadcasted:", std.ID)
+}
+
+// GetStandardByID — возвращает стандарт по ID
+func GetStandardByID(id string) *StandardBlock {
+	for i, std := range StandardLibrary {
+		if std.ID == id {
+			return &StandardLibrary[i]
+		}
+	}
+	return nil
+}
+
+// ShouldTriggerStandard — решает, стоит ли возбуждать стандарт
+func ShouldTriggerStandard(content string, alreadyActive map[string]bool) (bool, *StandardBlock, string) {
+	std, score, reason := MatchWithStandardsExtended(content)
+	if std == nil || score < 2.0 {
+		return false, nil, "Not strong enough match"
+	}
+	if alreadyActive != nil && alreadyActive[std.ID] {
+		return false, std, "Already active"
+	}
+	return true, std, reason
+}
+
+// SynthesizeStandardFromQBits — формирует новый стандарт из QBits + эмоция
+func SynthesizeStandardFromQBits(id string, keywords []string, priority float64, emotion string, sourceIDs []string) *StandardBlock {
+	std := StandardBlock{
+		ID:          id,
+		Keywords:    keywords,
+		Priority:    priority,
+		Dynamic:     true,
+		EmotionLink: emotion,
+		SourceQBits: sourceIDs,
+	}
+	StandardLibrary = append(StandardLibrary, std)
+	fmt.Println("[StandardSynth] ✨ Created:", std.ID, "from", sourceIDs, "linked to:", emotion)
+	return &std
 }

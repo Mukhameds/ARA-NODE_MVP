@@ -1,9 +1,15 @@
+
+---
+
+"C:\Documents\ARA-NODE_mvp\cmd\main.go"
+
+---
+
 package main
 
 import (
 	"fmt"
 	"time"
-	"strings"
 
 	"ara-node/core"
 	"ara-node/internal"
@@ -28,8 +34,6 @@ func main() {
 	prediction := internal.NewPredictionEngine(mem, nil, nil)
 	reflex := core.NewReflexEngine()
 	will := core.NewWillEngine(mem, nil, nil, phantom)
-	resonance := core.NewResonanceMatrix()
-	shutdown := core.NewShutdownEngine(0.4, 2*time.Second)
 
 	// === GHOST FIELD ===
 	ghost := core.NewGhostField()
@@ -86,35 +90,9 @@ func main() {
 		}
 	}()
 
-	go func() {
-		for {
-			time.Sleep(15 * time.Second)
-			resonance.Decay()
-		}
-	}()
-
-	go func() {
-		for {
-			time.Sleep(5 * time.Second)
-			currentMass := mem.EstimateTotalPhase()
-			shutdown.UpdateMass(currentMass)
-		}
-	}()
-
 	attention := core.NewAttentionEngine(mem, ghost, phantom, engine)
 	attention.StartBackgroundThinking()
 	will.DesireLoop()
-
-	// === WORD FORMATION ENGINE ===
-	wordEngine := internal.NewWordFormationEngine(dict, mem)
-
-	go func() {
-		for {
-			time.Sleep(3 * time.Second)
-			wordEngine.Tick()
-			wordEngine.Decay()
-		}
-	}()
 
 	// === CLI LOOP ===
 	for {
@@ -132,47 +110,6 @@ func main() {
 			continue
 		}
 
-		if input == "help" {
-			fmt.Println("🆘 Команды:\n- help\n- view\n- view emotions\n- delete <qbit_id>\n- sync\n- loadfacts\n- exit")
-			continue
-		}
-
-		if input == "view emotions" {
-			for _, e := range emotion.CurrentEmotions() {
-				fmt.Println("❤️", e)
-			}
-			continue
-		}
-
-		if strings.HasPrefix(input, "delete ") {
-			id := strings.TrimPrefix(input, "delete ")
-			mem.DeleteQBit(id)
-			continue
-		}
-
-		if input == "sync" {
-			fmt.Println("[Sync] 🔄 Запуск синхронизации (заглушка)...")
-			continue
-		}
-
-		if input == "loadfacts" {
-			err := internal.LoadFactsFromFile("data/core_knowledge.json", engine, ghost)
-			if err != nil {
-				fmt.Println("❌ Ошибка загрузки фактов:", err)
-			} else {
-				fmt.Println("📚 Факты успешно загружены.")
-			}
-			continue
-		}
-
-		// === 🔁 Инстинктивная реакция до основного сигнала
-		signals := instinct.TickSignals(time.Now(), input)
-		for _, sig := range signals {
-			engine.ProcessSignal(sig)
-			ghost.Propagate(sig)
-			phantom.TriggerFromMatch(sig)
-		}
-
 		sig := core.Signal{
 			ID:        fmt.Sprintf("sig_%d", time.Now().UnixNano()),
 			Content:   input,
@@ -187,9 +124,9 @@ func main() {
 		engine.ProcessSignal(sig)
 		ghost.Propagate(sig)
 		phantom.TriggerFromMatch(sig)
-
-		matched := mem.FindByTag("user")
-		resonance.BoostBySignal(sig, matched)
-		resonance.Print(sig.ID)
 	}
 }
+
+---
+
+---

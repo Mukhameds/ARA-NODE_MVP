@@ -1,0 +1,902 @@
+[
+  {
+    "content": "A",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "B",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "C",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "D",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "E",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "F",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "G",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "H",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "I",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "J",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "K",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "L",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "M",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "N",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "O",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "P",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "Q",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "R",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "S",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "T",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "U",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "V",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "W",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "X",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "Y",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "Z",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "a",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "b",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "c",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "d",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "e",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "f",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "g",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "h",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "i",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "j",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "k",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "l",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "m",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "n",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "o",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "p",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "q",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "r",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "s",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "t",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "u",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "v",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "w",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "x",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "y",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "z",
+    "tags": [
+      "letter",
+      "char"
+    ],
+    "phase": 0.5
+  },
+  {
+    "content": "0",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "1",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "2",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "3",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "4",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "5",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "6",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "7",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "8",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "9",
+    "tags": [
+      "digit",
+      "number"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "+",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "-",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "*",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "/",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "=",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": ">",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "<",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "(",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": ")",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "[",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "]",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "{",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "}",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": ".",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": ",",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": ":",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": ";",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "?",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "!",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "\"",
+    "tags": [
+      "symbol"
+    ],
+    "phase": 0.55
+  },
+  {
+    "content": "yes",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "no",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "help",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "think",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "time",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "system",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "signal",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "memory",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "reason",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "world",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "idea",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "mission",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "phase",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "weight",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "ghost",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "react",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "learn",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "form",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "go",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "come",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "want",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "like",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "know",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "see",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "hear",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "ARA",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "I",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "you",
+    "tags": [
+      "word",
+      "common"
+    ],
+    "phase": 0.6
+  },
+  {
+    "content": "1 + 1 = 2",
+    "tags": [
+      "math",
+      "fact"
+    ],
+    "phase": 0.7
+  },
+  {
+    "content": "2 + 2 = 4",
+    "tags": [
+      "math",
+      "fact"
+    ],
+    "phase": 0.7
+  },
+  {
+    "content": "3 * 3 = 9",
+    "tags": [
+      "math",
+      "fact"
+    ],
+    "phase": 0.7
+  },
+  {
+    "content": "5 - 2 = 3",
+    "tags": [
+      "math",
+      "fact"
+    ],
+    "phase": 0.7
+  },
+  {
+    "content": "10 / 2 = 5",
+    "tags": [
+      "math",
+      "fact"
+    ],
+    "phase": 0.7
+  }
+]

@@ -1,7 +1,10 @@
 package core
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"sort"
 	"sync"
 	"time"
@@ -132,6 +135,31 @@ func (m *MemoryEngine) DeleteQBit(id string) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 	delete(m.QBits, id)
+	fmt.Println("[MemoryEngine] ❌ QBit deleted:", id)
+}
+
+func (m *MemoryEngine) DeleteByTag(tag string) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	count := 0
+	for id, q := range m.QBits {
+		if Contains(q.Tags, tag) {
+			delete(m.QBits, id)
+			count++
+		}
+	}
+	fmt.Println("[MemoryEngine] 🧹 Deleted QBits by tag:", tag, "→", count)
+}
+
+func (m *MemoryEngine) ExistsQBit(content string, phase float64, tol float64) bool {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	for _, q := range m.QBits {
+		if q.Content == content && PhaseClose(q.Phase, phase, tol) {
+			return true
+		}
+	}
+	return false
 }
 
 func (m *MemoryEngine) DecayQBits() {
@@ -173,4 +201,58 @@ func (m *MemoryEngine) Merge(other *MemoryEngine) {
 		}
 	}
 	fmt.Println("[MemoryEngine] ✅ Merged external memory:", len(other.QBits), "entries")
+}
+
+func (m *MemoryEngine) ExportJSON(filename string) error {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	data, err := json.MarshalIndent(m.QBits, "", "  ")
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(filename, data, 0644)
+}
+
+func (m *MemoryEngine) ImportJSON(filename string) error {
+	bytes, err := os.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+	var imported map[string]QBit
+	if err := json.Unmarshal(bytes, &imported); err != nil {
+		return err
+	}
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	for id, q := range imported {
+		if _, exists := m.QBits[id]; !exists {
+			m.QBits[id] = q
+		}
+	}
+	fmt.Println("[MemoryEngine] 📥 Imported QBits:", len(imported))
+	return nil
+}
+
+// EstimateTotalPhase — возвращает среднюю фазу всех активных QBits
+func (m *MemoryEngine) EstimateTotalPhase() float64 {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	if len(m.QBits) == 0 {
+		return 0.0
+	}
+
+	var sum float64
+	var count int
+	now := time.Now()
+	for _, q := range m.QBits {
+		if now.Sub(q.LastAccessed) < 2*time.Minute {
+			sum += q.Phase
+			count++
+		}
+	}
+	if count == 0 {
+		return 0.0
+	}
+	return sum / float64(count)
 }
