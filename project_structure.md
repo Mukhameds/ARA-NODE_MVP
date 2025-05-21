@@ -1,66 +1,72 @@
-# 📁 ARA-NODE System Structure
+# 📁 ARA-NODE v3.5 — System Structure
 
 ## 🧠 Overview
 
-ARA-NODE is a reactive cognitive agent based on the paradigm: **Signal → Block → Reaction**. The system is built in modular Go code with a clean CLI entry point, autonomous memory, emotion, instinct, will, and phantom logic.
+ARA-NODE v3.5 is an advanced reactive cognitive agent built around the paradigm:
+
+```
+Signal → Block → Reaction → Memory → Phantom
+```
+
+The system integrates emotional, instinctive, volitional, and phantom-driven logic for autonomous cognition and adaptive learning. Fully modularized in Go, it offers a clear CLI entry point, reactive architecture, and user-driven memory management.
 
 ---
 
-## 📁 Project Directory
+## 📁 Project Directory Structure
 
-### `C:\Documents\ARA-NODE_mvp\`
+### 🔧 CLI Entry Point (`cmd/`)
 
-Root folder of the project.
+* **`main.go`**: Entry point; orchestrates modules, handles user inputs, processes system loops, and triggers reactions.
 
-### 🔧 `cmd/`
+### ⚙️ System Configuration (`config/`)
 
-* `main.go` — CLI entry point, connects all modules, handles user input, emits signals, processes loops.
+* **`manifest.go`**: Defines the immutable core identity and mission of the agent (`SelfKernel`).
 
-### ⚙️ `config/`
+### 🧠 Core Modules (`core/`)
 
-* `manifest.go` — SelfKernel: immutable identity of the agent (ID, mission, architect, time of birth).
+| Module                     | Functionality                                                |
+| -------------------------- | ------------------------------------------------------------ |
+| `signal_engine.go`         | Handles signal reception, transformation into QBits.         |
+| `memory_engine.go`         | Manages QBits lifecycle, storage, decay, and merging.        |
+| `signal_dictionary.go`     | Stores and manages basic perceptual units (letters, words).  |
+| `attention_engine.go`      | Generates background thought based on resonance.             |
+| `emotion_engine.go`        | Reacts to signals, influencing QBits through emotions.       |
+| `instincts.go`             | Governs innate protective reactions to critical signals.     |
+| `reflex_engine.go`         | Immediate reflex responses based on urgency tags.            |
+| `ghost_engine.go`          | Manages reactive signal propagation (`GhostField`).          |
+| `will_engine.go`           | Implements desire filtering, ensuring mission alignment.     |
+| `decay_analysis_engine.go` | Cleans memory by removing obsolete or weak QBits.            |
+| `QBitEvolutionEngine.go`   | Evolves significant QBits into long-term memory or reflexes. |
+| `prediction.go`            | Provides simple prediction logic based on past signals.      |
+| `standards.go`             | Dynamic management of system standards and missions.         |
+| `types.go`                 | Fundamental data structures (`Signal`, `QBit`, `Reaction`).  |
+| `helpers.go`               | Utility functions (phase matching, tag management).          |
+| `shutdown_engine.go`       | Manages graceful module shutdown under critical conditions.  |
+| `resonance_matrix.go`      | Tracks associative links between QBits.                      |
 
-### 🧠 `core/` — Core signal architecture
+### 🔬 Internal Processes and Extensions (`internal/`)
 
-| File                       | Purpose                                                    |
-| -------------------------- | ---------------------------------------------------------- |
-| `signal_engine.go`         | Processes all incoming signals into QBits and reactions.   |
-| `memory_engine.go`         | Stores, decays, evolves QBits; core memory.                |
-| `signal_dictionary.go`     | VariableBlock dictionary: letters, symbols, words, images. |
-| `attention_engine.go`      | Internal excitation generator (background thinking).       |
-| `emotion_engine.go`        | Reacts to emotional triggers; holds current emotions.      |
-| `instincts.go`             | Detects silence, loops, errors (instinct logic).           |
-| `reflex_engine.go`         | Immediate reflexes triggered by tags.                      |
-| `ghost_engine.go`          | GhostField and Block logic: reaction rules.                |
-| `will_engine.go`           | DesireLoop; filters signals against mission standards.     |
-| `decay_analysis_engine.go` | Detects and logs decayed QBits.                            |
-| `QBitEvolutionEngine.go`   | Evolves QBits to reflex or generator type.                 |
-| `prediction.go`            | Basic prediction engine using primitive chains.            |
-| `standards.go`             | Standard mission blocks and keyword matching.              |
-| `bootstrap.go`             | Initial user interview: purpose, interests, profile.       |
-| `types.go`                 | Core types: Signal, QBit, Reaction, PhantomLog, etc.       |
-| `helpers.go`               | Utility functions (phase diff, tag removal, etc).          |
+| Module                        | Functionality                                              |
+| ----------------------------- | ---------------------------------------------------------- |
+| `phantom.go`                  | Handles phantom generation, filtering, merging, and decay. |
+| `phantom_tree.go`             | Displays hierarchical relationships among phantoms.        |
+| `suggestor.go`                | Generates suggestions based on QBit clusters.              |
+| `p2p_sync.go`                 | Facilitates memory synchronization over P2P networks.      |
+| `github_sync.go`              | Synchronizes memory state with GitHub repositories.        |
+| `human_node.go`               | Enables user-driven memory refinement (feedback).          |
+| `load_knowledge.go`           | Loads structured external knowledge into memory.           |
+| `knowledge_profile_loader.go` | Licensed loader for knowledge modules.                     |
+| `bootstrap.go`                | Initializes system with user cognitive profiling.          |
+| `word_formation.go`           | Forms stable lexical units from raw signals.               |
+| `fact_loader.go`              | Imports structured facts and knowledge for immediate use.  |
 
-### 🔬 `internal/` — Interface, I/O, Extensions
+### 🧬 Data Storage (`data/`)
 
-| File                          | Purpose                                             |
-| ----------------------------- | --------------------------------------------------- |
-| `phantom.go`                  | Phantom generation, merging, decay, deep memory.    |
-| `phantom_tree.go`             | Console tree display of phantom source chains.      |
-| `suggestor.go`                | SuggestorEngine: idea proposal from QBit chains.    |
-| `p2p_sync.go`                 | libp2p: P2P discovery, stream sync, memory merge.   |
-| `github_sync.go`              | GitHub memory sync via msgpack and `git push/pull`. |
-| `human_node.go`               | User feedback: upvote, downvote, tag QBits.         |
-| `load_knowledge.go`           | Load external knowledge (JSON) into memory.         |
-| `knowledge_profile_loader.go` | License-checked loader wrapper.                     |
-
-### 🧬 `data/`
-
-* `memory.msgpack` — Serialized QBit memory used in GitHub sync.
+* **`memory.msgpack`**: Serialized memory state used for synchronization and persistence.
 
 ---
 
-## 🔄 Runtime Flow (Simplified)
+## 🔄 Simplified Runtime Signal Flow
 
 ```
 User Input
@@ -71,13 +77,45 @@ Memory + GhostField
    ↓
 PhantomEngine + SuggestorEngine
    ↓
-Emotion + Will + Reflex + Instinct
+EmotionEngine + WillEngine + ReflexEngine + InstinctEngine
    ↓
-Background Thinking (Attention)
+AttentionEngine (Background Thinking)
    ↓
-Decay + Evolution
+DecayAnalysisEngine + QBitEvolutionEngine
 ```
 
 ---
 
+## 🔒 Ethical & Safety Mechanisms
 
+* Instinctive blocking of unethical signals.
+* Emotional filtering of potentially harmful phantoms.
+* Reactive shutdown mechanisms under critical conditions.
+
+---
+
+## 🗂️ Future Development Roadmap
+
+* Further enhancement of phantom logic stability.
+* Integration of structured knowledge bases.
+* Advanced stress testing of system resilience.
+
+---
+
+## 📖 Documentation & Resources
+
+Detailed documentation and references are available in:
+
+* [ARA-NODE Documentation Index](./ARA-NODE_Documentation_Index.md)
+
+---
+
+## 🧾 Author & Contact
+
+**Mukhamed Kamilovich Satybaev**
+
+* 📞 +996 507 442 873
+* 🌐 [ARU-AGI Project](https://mukhameds.github.io/ARU-AGI-Project/)
+* 🐦 [Twitter/X](https://x.com/redkms2025)
+* 🔗 [LinkedIn](https://www.linkedin.com/in/muhamed-satybaev-38b864362)
+* 📁 [GitHub: Mukhameds](https://github.com/Mukhameds)
