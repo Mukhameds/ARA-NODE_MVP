@@ -2,75 +2,134 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"strings"
+	"time"
 
 	"ara-node/core"
+	"ara-node/field"
 	"ara-node/internal"
 )
 
 func main() {
 	fmt.Println("🧠 ARA-NODE CLI started.")
 
-	// === CORE INITIALIZATION ===
+	// === CORE INIT ===
 	mem := core.NewMemoryEngine()
 	dict := core.NewSignalDictionary(mem)
 	internal.RunBootstrap(mem, dict)
+	shutdown := core.NewShutdownEngine(1.0, 2*time.Second)
+
+	// === GHOST ROCKET SETUP ===
+	rocket := field.NewGhostRocket("MainMind")
+
+	mathField := field.NewMatrix("math")
+	emotionField := field.NewMatrix("emotion")
+	phantomField := field.NewMatrix("phantom")
+	instinctField := field.NewMatrix("instinct")
+
+	rocket.AddField(mathField)
+	rocket.AddField(emotionField)
+	rocket.AddField(phantomField)
+	rocket.AddField(instinctField)
+
+	// === ROCKET ADAPTER ===
+	adapter := field.RocketAdapter(rocket)
 
 	// === MODULES ===
 	emotion := internal.NewEmotionEngine(mem)
-	instinct := internal.NewInstinctEngine()
+	instinct := internal.NewInstinctEngine(adapter)
 	emotion.Instincts = instinct
+
 	timeEngine := internal.NewTimeEngine()
-	phantom := internal.NewPhantomEngine(mem, instinct, emotion, timeEngine)
-	suggestor := internal.NewSuggestorEngine(mem)
-	decay := internal.NewDecayAnalysisEngine(mem)
+	phantom := internal.NewPhantomEngine(mem, instinct, emotion, timeEngine, adapter)
+	suggestor := internal.NewSuggestorEngine(mem, adapter)
 	prediction := internal.NewPredictionEngine(mem, nil, nil)
 	reflex := core.NewReflexEngine()
 	will := core.NewWillEngine(mem, nil, nil, phantom)
 	resonance := core.NewResonanceMatrix()
-	shutdown := core.NewShutdownEngine(0.4, 2*time.Second)
+	attention := core.NewAttentionEngine(mem, adapter, phantom, nil)
+	dual := core.NewDualProcessor(mem, adapter)
 
-	// === GHOST FIELD ===
-	ghost := core.NewGhostField()
-
-	ghost.Register("emotion", core.ReactionRule{
+	// === Register reaction blocks ===
+	emotionField.RegisterBlock("emotion", field.ReactionRule{
 		MatchTags: []string{"emotion", "instinct", "success", "fail"},
 		MinPhase:  0.5,
 		Action:    emotion.React,
 	}, 200*time.Millisecond)
 
-	ghost.Register("suggestor", core.ReactionRule{
-		MatchTags: []string{"user", "phantom"},
-		MinPhase:  0.6,
-		Action: func(sig core.Signal) {
-			go suggestor.SuggestFromQBits()
-		},
-	}, 1*time.Second)
-
-	ghost.Register("phantom", core.ReactionRule{
+	phantomField.RegisterBlock("phantom", field.ReactionRule{
 		MatchTags: []string{"phantom", "standard", "merge"},
 		MinPhase:  0.7,
 		Action:    phantom.TriggerFromMatch,
 	}, 200*time.Millisecond)
 
-	ghost.Register("reflex", core.ReactionRule{
+	instinctField.RegisterBlock("reflex", field.ReactionRule{
 		MatchTags: []string{"danger", "reflex", "instinct_error"},
 		MinPhase:  0.5,
 		Action:    reflex.React,
 	}, 100*time.Millisecond)
 
-	// === SIGNAL ENGINE ===
-	engine := core.NewSignalEngine(mem, ghost)
-	prediction.Engine = engine
-	prediction.Ghost = ghost
-	will.Engine = engine
-	will.Ghost = ghost
+	mathField.RegisterBlock("suggestor", field.ReactionRule{
+		MatchTags: []string{"user", "phantom", "background", "core", "math", "physics", "symbol"},
+		MinPhase:  0.7,
+		Action: func(sig core.Signal) {
+			go suggestor.SuggestFromQBits()
+		},
+	}, 2*time.Second)
 
-	// === BACKGROUND LOOPS ===
-	internal.DefaultEmotionSet(emotion)
-	core.DefaultReflexSet(reflex)
-	decay.StartDecayLoop()
+	// === META FIELDS ===
+	metaFieldMath := field.NewMatrix("meta_math")
+	metaFieldEmotion := field.NewMatrix("meta_emotion")
+	metaFieldPhantom := field.NewMatrix("meta_phantom")
+
+	rocket.AddField(metaFieldMath)
+	rocket.AddField(metaFieldEmotion)
+	rocket.AddField(metaFieldPhantom)
+
+	//meta := map[string]*field.Matrix{
+	//	"math":    metaFieldMath,
+	//	"emotion": metaFieldEmotion,
+	//	"phantom": metaFieldPhantom,
+	//}
+
+	// === PeerSync (можно включить позже) ===
+	/*
+		peerSync, err := internal.NewPeerSync(mem, meta)
+		if err != nil {
+			fmt.Println("❌ PeerSync init error:", err)
+		} else {
+			fmt.Println("🌐 PeerSync initialized.")
+		}
+	*/
+
+	// === ENGINE WIRING ===
+	engine := core.NewSignalEngine(mem, adapter)
+	prediction.Engine = engine
+	prediction.Ghost = adapter
+	will.Engine = engine
+	will.Ghost = adapter
+	attention.Engine = engine
+
+	// === BACKGROUND ENGINES ===
+	attention.StartBackgroundThinking()
+	will.DesireLoop()
+
+	go func() {
+		for {
+			time.Sleep(6 * time.Second)
+			suggestor.SuggestFromQBits()
+		}
+	}()
+
+	go func() {
+		for {
+			time.Sleep(8 * time.Second)
+			top := mem.FindTopRelevant("core", 0.6)
+			if len(top) >= 3 {
+				phantom.GeneratePhantomChain(top[:5])
+			}
+		}
+	}()
 
 	go func() {
 		for {
@@ -97,22 +156,8 @@ func main() {
 		for {
 			time.Sleep(5 * time.Second)
 			currentMass := mem.EstimateTotalPhase()
-			shutdown.UpdateMass(currentMass)
-		}
-	}()
-
-	attention := core.NewAttentionEngine(mem, ghost, phantom, engine)
-	attention.StartBackgroundThinking()
-	will.DesireLoop()
-
-	// === WORD FORMATION ENGINE ===
-	wordEngine := internal.NewWordFormationEngine(dict, mem)
-
-	go func() {
-		for {
-			time.Sleep(3 * time.Second)
-			wordEngine.Tick()
-			wordEngine.Decay()
+			fmt.Printf("[MassCheck] 🧮 Estimated signal mass: %.3f\n", currentMass)
+			shutdown.UpdateMass(currentMass, mem)
 		}
 	}()
 
@@ -122,74 +167,67 @@ func main() {
 		fmt.Print("> ")
 		fmt.Scanln(&input)
 
-		if input == "exit" || input == "quit" {
+		switch {
+		case input == "exit" || input == "quit":
 			fmt.Println("👋 Завершение работы.")
-			break
-		}
+			return
 
-		if input == "view" {
+		case input == "view":
 			mem.ListQBits()
-			continue
-		}
 
-		if input == "help" {
+		case input == "help":
 			fmt.Println("🆘 Команды:\n- help\n- view\n- view emotions\n- delete <qbit_id>\n- sync\n- loadfacts\n- exit")
-			continue
-		}
 
-		if input == "view emotions" {
+		case input == "view emotions":
 			for _, e := range emotion.CurrentEmotions() {
 				fmt.Println("❤️", e)
 			}
-			continue
-		}
 
-		if strings.HasPrefix(input, "delete ") {
+		case strings.HasPrefix(input, "delete "):
 			id := strings.TrimPrefix(input, "delete ")
 			mem.DeleteQBit(id)
-			continue
-		}
 
-		if input == "sync" {
+		case input == "sync":
 			fmt.Println("[Sync] 🔄 Запуск синхронизации (заглушка)...")
-			continue
-		}
 
-		if input == "loadfacts" {
-			err := internal.LoadFactsFromFile("data/core_knowledge.json", engine, ghost)
+		case input == "loadfacts":
+			err := internal.LoadFactsFromFile("data/core_knowledge.json", engine, adapter)
 			if err != nil {
 				fmt.Println("❌ Ошибка загрузки фактов:", err)
 			} else {
 				fmt.Println("📚 Факты успешно загружены.")
 			}
-			continue
+
+		default:
+			// === Инстинктивные сигналы до основного
+			signals := instinct.TickSignals(time.Now(), input)
+			for _, sig := range signals {
+				dpSignal := sig
+				dpSignal.Type = "user"
+				dpSignal.Tags = append(dpSignal.Tags, "cli")
+				dpSignal.Origin = "instinct"
+				dpSignal.Phase = 0.7
+				dpSignal.Weight = 0.8
+				dpSignal.Timestamp = time.Now()
+				dual.ProcessDual(dpSignal)
+			}
+
+			// === Основной пользовательский сигнал
+			sig := core.Signal{
+				ID:        fmt.Sprintf("sig_%d", time.Now().UnixNano()),
+				Content:   input,
+				Tags:      []string{"user"},
+				Type:      "user",
+				Origin:    "cli",
+				Phase:     0.75,
+				Weight:    1.0,
+				Timestamp: time.Now(),
+			}
+			dual.ProcessDual(sig)
+
+			matched := mem.FindByTag("user")
+			resonance.BoostBySignal(sig, matched)
+			resonance.Print(sig.ID)
 		}
-
-		// === 🔁 Инстинктивная реакция до основного сигнала
-		signals := instinct.TickSignals(time.Now(), input)
-		for _, sig := range signals {
-			engine.ProcessSignal(sig)
-			ghost.Propagate(sig)
-			phantom.TriggerFromMatch(sig)
-		}
-
-		sig := core.Signal{
-			ID:        fmt.Sprintf("sig_%d", time.Now().UnixNano()),
-			Content:   input,
-			Tags:      []string{"user"},
-			Type:      "user",
-			Origin:    "cli",
-			Phase:     0.75,
-			Weight:    1.0,
-			Timestamp: time.Now(),
-		}
-
-		engine.ProcessSignal(sig)
-		ghost.Propagate(sig)
-		phantom.TriggerFromMatch(sig)
-
-		matched := mem.FindByTag("user")
-		resonance.BoostBySignal(sig, matched)
-		resonance.Print(sig.ID)
 	}
 }

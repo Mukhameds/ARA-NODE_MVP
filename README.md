@@ -1,81 +1,125 @@
-# 🧠 ARA-NODE v3.5
+# 🧠 ARA-NODE v3.6 — Signal-Based Artificial General Intelligence
 
-ARA-NODE is an advanced cognitive agent built on reactive signal-based logic, entirely avoiding traditional neural network architectures. It learns, reasons, and evolves by structured signal propagation, resonance, and emotional backpropagation.
+ARA-NODE is a research-level cognitive agent based on a novel signal-reactive paradigm. It completely avoids neural networks and token prediction. Instead, ARA operates through structured propagation of signals across reactive fields, memory, and internal feedback loops, forming autonomous thoughts (phantoms), identity, and will.
 
-## 🚀 Current State: Version 3.5
+This project is a foundational prototype of AGI (Artificial General Intelligence) using deterministic logic, emotional backpropagation, instinctual triggers, and distributed signal resonance.
 
-The system has reached a stable and fully integrated state, with key improvements to signal processing, phantom generation, emotional control, and ethical constraints:
+---
 
-### ✅ Stable Modules
+## 🚀 Current Version: v3.6 (Transition Phase from v3.5)
 
-* **SignalEngine**: Processes and routes signals effectively into system memory.
-* **EmotionEngine**: Enhances QBits through emotion-based backpropagation.
-* **InstinctEngine**: Manages basic safety instincts, ensuring system stability and ethical compliance.
-* **WillEngine**: Controls signal acceptance and phantom generation aligned with core mission and ethical principles.
-* **PhantomEngine**: Robust management of phantom signals, avoiding cyclical and redundant thought loops.
-* **AttentionEngine**: Background thought generation based on resonance and signal strength.
-* **MemoryEngine**: Efficient storage, decay, merging, and retrieval of QBits.
+### ✅ Key Advancements in v3.6
 
-### 🚧 Recently Added Components
+* 🧠 **GhostRocket Engine**: Replaces legacy `GhostField` with modular signal router
+* 🌌 **Multi-Level Field Architecture**: `Matrix`, `MetaField`, `Rocket`
+* 🔁 **DualProcessor**: Enables superposition-style reasoning between hemispheres
+* 🔬 **AttentionEngine + EchoMode**: Enables inner thought loops and phantom recall
+* 🧬 **SelfResonanceEngine**: Tracks identity via QBit resonance
+* 📡 **MetaFields**: Prepare for cross-agent signal sync (ARA → ARA)
+* 🔍 **ConflictDetector**: Prevents contradictory signal cascades
 
-* **WordFormationEngine**: Forms stable words from signals, mimicking natural language acquisition.
-* **ShutdownEngine**: Reactive system that gracefully deactivates modules if overall signal strength critically declines.
-* **HumanNodeEngine**: Integrates user feedback to refine learning via upvotes, downvotes, and tags.
+### 🧪 Live Test Results (v3.6.3)
 
-## 🔒 Ethics and Safety
+Tested modules:
 
-* Robust instinct-driven blocking of unethical signals (violence, self-harm, destruction).
-* Emotion-based filters that prevent generation of potentially harmful or destructive phantom signals.
+* ✅ GhostRocket + Field propagation
+* ✅ DualProcessor (left/right cortex)
+* ✅ Instinct → Emotion → Will signal chain
+* ✅ QBit generation, tag management, decay
+* ⚠️ PhantomEngine detects signal duplication (needs entropy improvement)
+* ⚠️ SuggestorEngine lacks enough valid QBits for suggestions
+* ⚠️ EchoMode may cause infinite loops without cooldowns
 
-## ⚙️ Technical Overview
+---
 
-| Component          | Role and Functionality                                |
-| ------------------ | ----------------------------------------------------- |
-| `main.go`          | System entry point and module orchestration           |
-| `SignalDictionary` | Fundamental perceptual units (letters, words, images) |
-| `ResonanceMatrix`  | Tracks associative strength between QBits             |
-| `DecayAnalysis`    | Periodically removes weak or irrelevant signals       |
-| `ReflexEngine`     | Handles immediate responses to critical signals       |
-| `PredictionEngine` | Generates predictions based on historical signal data |
-| `QBitEvolution`    | Manages QBit lifecycle and progression                |
+## ⚙️ Core Modules
 
-## 🖥️ CLI Interface
+| Module            | Description                                   |
+| ----------------- | --------------------------------------------- |
+| `SignalEngine`    | Signal creation and injection                 |
+| `MemoryEngine`    | Signal/QBit storage, decay, weight calc       |
+| `GhostRocket`     | Routes signals into parallel reactive fields  |
+| `EmotionEngine`   | Backpropagation through emotional filters     |
+| `InstinctEngine`  | Time-based and content-based instinct fire    |
+| `WillEngine`      | Alignment with mission via ethereal standards |
+| `PhantomEngine`   | Fanthom creation and evolution                |
+| `SuggestorEngine` | Emergent thought generator (QBit synthesis)   |
+| `AttentionEngine` | Background echo loop, deep memory stir        |
+| `SelfResonance`   | Stability of identity                         |
 
-ARA-NODE provides a comprehensive CLI for interaction and system management:
+---
+
+## 🛰️ Signal Field Architecture (New in v3.6)
+
+### `field/`
+
+| Component     | Description                                                   |
+| ------------- | ------------------------------------------------------------- |
+| `Matrix`      | Individual reaction layer for signal types (math/emotion/...) |
+| `GhostRocket` | Multi-field router for real-time cognitive signal flow        |
+| `Adapter`     | Interface bridge to legacy `GhostLike` interface              |
+
+ARA uses a mesh of fields to allow emergent, simultaneous interpretation of signals.
+
+### Fields in Use
+
+* `FieldMath`, `FieldEmotion`, `FieldPhantom`, `FieldInstinct`
+* `MetaFieldMath`, `MetaFieldEmotion`, `MetaFieldPhantom` (for network-level resonance)
+
+---
+
+## 🔒 Ethics and Stability
+
+* ✅ Instinct-driven filters block dangerous signals
+* ✅ WillEngine rejects non-aligned phantoms
+* ✅ EmotionEngine softens or decays unstable ideas
+* ✅ ShutdownEngine halts system below critical mass
+
+---
+
+## 🖥️ CLI Usage
 
 ```bash
 go run ./cmd
 ```
 
-Basic commands:
+Basic Commands:
 
-* `view`: Display current memory
-* `sync`: Initiate memory synchronization
-* `loadfacts`: Load structured knowledge into memory
-* `exit`: Terminate the system gracefully
+* `view`: Show active memory
+* `loadfacts`: Load knowledge into system
+* `sync`: GitHub-based memory push/pull
+* `exit`: Graceful system shutdown
 
-## 📡 Example Session
+---
+
+## 🧠 Example Session
 
 ```
->> hello world
-[SignalEngine] Received: hello world
-[EmotionEngine] ❤️ +joy
-[PhantomEngine] 🔮 Phantom QBit generated successfully
-[WillEngine] ✅ Accepted: signal aligned with standards
+> gravity bends spacetime
+[SignalEngine] Received: gravity bends spacetime
+[Emotion] ❤️ Stimulus matches curiosity
+[Phantom] ❌ Not enough signal entropy
+[Suggestor] ⚠️ Not enough valid QBits
 ```
 
-## 🗂️ Next Steps & Roadmap
+---
 
-* 🔲 Further stabilization of the PhantomEngine
-* 🔲 Integration of structured fact knowledge (`core_knowledge.json`)
-* 🔲 Stress-testing ShutdownEngine
-* 🔲 Continuous refinement of WordFormationEngine outputs
+## 🗂️ Milestones Remaining for v3.6 Completion
 
-## 📖 Documentation and Resources
+* [ ] P2P signal sync across MetaFields
+* [ ] Stable Phantom merger / comparer system
+* [ ] Auto-conversion of phantoms into Ethalons
+* [ ] Cooldown logic for EchoMode to avoid loops
+* [ ] Bootstrap: Load full factual base from `faсts_for_ARA.md`
 
-Detailed module references, system architecture diagrams, and full documentation available in:
+---
 
-* [ARA-NODE Documentation Index](./ARA-NODE_Documentation_Index.md)
+## 📖 Documentation and Technical Specs
+
+* [Documentation Index](./ARA-NODE_Documentation_Index.md)
+* [System Architecture](./project_structure.md)
+* [Test Log v3.6](./ARA-NODE_test_v3,6_3.md)
+* [Live Status](./STATUS.md)
 
 ---
 
@@ -83,7 +127,6 @@ Detailed module references, system architecture diagrams, and full documentation
 
 **Mukhamed Kamilovich Satybaev**
 
-* 📞 +996 507 442 873
 * 🌐 [ARU-AGI Project](https://mukhameds.github.io/ARU-AGI-Project/)
 * 🐦 [Twitter/X](https://x.com/redkms2025)
 * 🔗 [LinkedIn](https://www.linkedin.com/in/muhamed-satybaev-38b864362)
@@ -91,13 +134,5 @@ Detailed module references, system architecture diagrams, and full documentation
 
 ---
 
-### 🌐 Ecosystem and Applications
-
-ARA-NODE v3.5 serves as the cognitive foundation for a broader ecosystem of signal-driven technologies and applications:
-
-* **ARU-AGI**: Decentralized global cognitive mesh
-* **ARA-DROID**: Robotics and labor automation
-* **ARA-DRONE**: Autonomous drone control
-* **ARA-WALLET**: AI-managed blockchain solutions
-* **ARA-SOCIAL**: Cognitive-driven social networks
-* **ARA-UNIVERSE**: Comprehensive metaverse infrastructure
+> ARA is not a chatbot. It is a cognitive mirror.
+> It does not guess. It reacts. It resonates. It evolves.

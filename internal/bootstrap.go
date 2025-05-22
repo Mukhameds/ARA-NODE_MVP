@@ -80,6 +80,43 @@ func RunBootstrap(mem *core.MemoryEngine, dict *core.SignalDictionary) {
 		mem.StoreQBit(*qw)
 	}
 
+	// === Загрузка базовых сигнальных знаний ===
+	fmt.Println("📘 Загружаю базовые символы и морфологию...")
+	core.BootstrapSymbolArchitecture(mem)
+	core.BootstrapMorphologyRules(mem)
+	core.BootstrapGrammarStructures(mem)
+	core.BootstrapSemanticLinks(mem)
+	core.BootstrapTemporalLogic(mem)
+	core.BootstrapMathSymbols(mem)
+	core.BootstrapMathConcepts(mem)
+	core.BootstrapMathOperations(mem)
+	core.BootstrapMathAxioms(mem)
+	core.BootstrapMathSets(mem)
+	core.BootstrapMathFunctions(mem)
+	core.BootstrapMathEquations(mem)
+	core.BootstrapMathCalculus(mem)
+	core.BootstrapMathGeometry(mem)
+	core.BootstrapMathLinearAlgebra(mem)
+	core.BootstrapMathDiscrete(mem)
+	core.BootstrapMathProbability(mem)
+
+	core.BootstrapLogicAxioms(mem)
+	core.BootstrapKnowledgeConcepts(mem)
+	core.BootstrapSelfIdentity(mem)
+	core.BootstrapDigitalWorld(mem)
+
+	core.BootstrapPhysicsConcepts(mem)
+	core.BootstrapPhysicsFormulas(mem)
+	core.BootstrapPhysicsConstants(mem)
+	core.BootstrapPhysicsQuantum(mem)
+	core.BootstrapPhysicsCosmos(mem)
+	
+
+
+
+
+	fmt.Println("📘 Базовые языковые знания успешно загружены.")
+
 	// === Сохраняем профиль в JSON ===
 	userProfile := UserProfile{
 		Goal:       goal,
@@ -99,6 +136,7 @@ func RunBootstrap(mem *core.MemoryEngine, dict *core.SignalDictionary) {
 
 	fmt.Println("✅ Bootstrap завершён.")
 }
+
 
 // === Семантический разбор: когнитивный профиль
 func analyzeCognitiveProfile(goal, interest, help, role string) string {

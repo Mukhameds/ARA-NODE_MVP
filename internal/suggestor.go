@@ -10,12 +10,19 @@ import (
 // SuggestorEngine — генератор предложений/мыслей
 type SuggestorEngine struct {
 	Memory *core.MemoryEngine
+	Ghost  core.GhostLike
 }
 
+
+
 // NewSuggestorEngine — инициализация
-func NewSuggestorEngine(mem *core.MemoryEngine) *SuggestorEngine {
-	return &SuggestorEngine{Memory: mem}
+func NewSuggestorEngine(mem *core.MemoryEngine, ghost core.GhostLike) *SuggestorEngine {
+	return &SuggestorEngine{
+		Memory: mem,
+		Ghost:  ghost,
+	}
 }
+
 
 // SuggestFromQBits — ищет цепочки и предлагает мысль
 func (s *SuggestorEngine) SuggestFromQBits() {
@@ -70,6 +77,12 @@ func (s *SuggestorEngine) SuggestFromQBits() {
 		q.Phase = group[0].Phase
 		q.Weight = signalMass / float64(len(group))
 		s.Memory.StoreQBit(*q)
+
+		if s.Ghost != nil {
+			signal := core.SignalFromQBit(*q)
+			s.Ghost.Propagate(signal)
+		}
+
 	}
 }
 
@@ -152,3 +165,4 @@ func (s *SuggestorEngine) GenerateSuggestion(ideas []string) string {
 	}
 	return fmt.Sprintf("Would you like to explore the idea: \"%s\" + ...?", strings.Join(ideas, " + "))
 }
+

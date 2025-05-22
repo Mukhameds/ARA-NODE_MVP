@@ -16,7 +16,7 @@ type FactItem struct {
 }
 
 // LoadFactsFromFile загружает знания из JSON и возбуждает их как сигналы
-func LoadFactsFromFile(filename string, engine *core.SignalEngine, ghost *core.GhostField) error {
+func LoadFactsFromFile(filename string, engine *core.SignalEngine, ghost core.GhostLike) error {
 	file, err := os.ReadFile(filename)
 	if err != nil {
 		return fmt.Errorf("ошибка чтения файла: %w", err)

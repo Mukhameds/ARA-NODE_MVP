@@ -20,13 +20,14 @@ type PredictionEngine struct {
 	Memory          *core.MemoryEngine
 	Rules           []PredictionRule
 	Engine          *core.SignalEngine
-	Ghost           *core.GhostField
+	Ghost 			core.GhostLike
+
 	Enabled         bool
 	LastPredictions map[string]time.Time
 	Pause           time.Duration
 }
 
-func NewPredictionEngine(mem *core.MemoryEngine, eng *core.SignalEngine, ghost *core.GhostField) *PredictionEngine {
+func NewPredictionEngine(mem *core.MemoryEngine, eng *core.SignalEngine, ghost core.GhostLike) *PredictionEngine {
 	return &PredictionEngine{
 		Memory:          mem,
 		Engine:          eng,

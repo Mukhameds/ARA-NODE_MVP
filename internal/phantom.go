@@ -15,18 +15,21 @@ type PhantomEngine struct {
 	Instincts  *InstinctEngine
 	Emotions   *EmotionEngine
 	TimeEngine *TimeEngine // 🕒 биочасы
+	Ghost      core.GhostLike
 }
 
-func NewPhantomEngine(mem *core.MemoryEngine, inst *InstinctEngine, emo *EmotionEngine, te *TimeEngine) *PhantomEngine {
+func NewPhantomEngine(mem *core.MemoryEngine, inst *InstinctEngine, emo *EmotionEngine, te *TimeEngine, ghost core.GhostLike) *PhantomEngine {
 	return &PhantomEngine{
 		Memory:     mem,
 		Instincts:  inst,
 		Emotions:   emo,
 		TimeEngine: te,
+		Ghost:      ghost,
 	}
 }
 
-// (остальной код без изменений)
+
+
 
 
 func (pe *PhantomEngine) TriggerFromMatch(sig core.Signal) {
@@ -102,6 +105,20 @@ func (pe *PhantomEngine) GeneratePhantomChain(chain []core.QBit) {
 	summary = strings.TrimSuffix(summary, " + ")
 
 
+	// 🔍 Проверка конфликта перед генерацией фантома
+	conflict := ConflictDetector{Memory: pe.Memory}
+	phantomCandidate := core.QBit{
+	Content: "[phantom] " + summary,
+	Phase:   chain[0].Phase,
+	Weight:  signalMass,
+	}
+if conflict.CheckConflict(phantomCandidate) {
+	fmt.Println("[PhantomEngine] ❌ Phantom rejected due to internal contradiction.")
+	return
+}
+
+
+
 	// Защита от повторной генерации фантома с тем же содержанием
 if pe.Memory.ExistsQBit("[phantom] "+summary, chain[0].Phase, 0.01) {
 	fmt.Println("[PhantomEngine] ⚠️ Phantom already exists — skip")
@@ -126,6 +143,8 @@ if pe.Memory.ExistsQBit("[phantom] "+summary, chain[0].Phase, 0.01) {
 		stdTags = []string{"standard_candidate", id}
 		stdWeightBonus = priority * float64(score)
 	}
+
+
 
 	if allPhantom {
 		fmt.Println("[PhantomEngine] ❌ All QBits are phantom, abort generation")
@@ -166,6 +185,12 @@ if pe.Memory.ExistsQBit("[phantom] "+summary, chain[0].Phase, 0.01) {
 	newQ.Phase = chain[0].Phase
 	newQ.Weight = (signalMass + stdWeightBonus) / float64(len(chain))
 	pe.Memory.StoreQBit(*newQ)
+
+	if pe.Ghost != nil {
+	signal := core.SignalFromQBit(*newQ)
+	pe.Ghost.Propagate(signal)
+}
+
 
 	go pe.DecayPhantom(newQ.ID, newQ.Weight)
 

@@ -101,8 +101,28 @@ type FanthomInterface interface {
 	TriggerFromMatch(sig Signal)
 }
 
+
+// GhostLike — интерфейс реактивного поля
+type GhostLike interface {
+	Propagate(sig Signal)
+}
+
+
 // PhantomLog — для построения дерева фантомов
 type PhantomLog struct {
 	PhantomID string
 	SourceIDs []string
+}
+
+func SignalFromQBit(q QBit) Signal {
+	return Signal{
+		ID:        "sig_" + q.ID,
+		Content:   q.Content,
+		Tags:      q.Tags,
+		Timestamp: time.Now(),
+		Phase:     q.Phase,
+		Weight:    q.Weight,
+		Type:      "phantom",
+		Origin:    "phantom_engine",
+	}
 }

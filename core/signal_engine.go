@@ -12,11 +12,12 @@ import (
 // а также транслирует их по всей реактивной архитектуре (через GhostField).
 type SignalEngine struct {
 	Memory *MemoryEngine
-	Ghost  *GhostField
+	Ghost GhostLike
+
 }
 
 // NewSignalEngine — инициализация ядра обработки сигналов
-func NewSignalEngine(mem *MemoryEngine, ghost *GhostField) *SignalEngine {
+func NewSignalEngine(mem *MemoryEngine, ghost GhostLike) *SignalEngine {
 	return &SignalEngine{
 		Memory: mem,
 		Ghost:  ghost,

@@ -1,4 +1,12 @@
+
 package core
+
+import (
+	"strings"
+	// другие импорты...
+)
+
+
 
 // RemoveTag удаляет указанный тег из слайса тегов
 func RemoveTag(tags []string, target string) []string {
@@ -29,4 +37,21 @@ func Contains(slice []string, item string) bool {
 		}
 	}
 	return false
+}
+
+
+// AddUniqueTag добавляет тег, если его ещё нет в срезе
+func AddUniqueTag(tags []string, newTag string) []string {
+	for _, t := range tags {
+		if t == newTag {
+			return tags
+		}
+	}
+	return append(tags, newTag)
+}
+
+
+// Tokenize разбивает строку на слова и приводит их к нижнему регистру
+func Tokenize(s string) []string {
+	return strings.Fields(strings.ToLower(s))
 }

@@ -75,7 +75,7 @@ func MatchWithStandardsExtended(content string) (*StandardBlock, float64, string
 }
 
 // TriggerStandard — возбуждает стандарт как задачу (трансляция в поле)
-func TriggerStandard(stdID string, se *SignalEngine, gf *GhostField, pe FanthomInterface) {
+func TriggerStandard(stdID string, se *SignalEngine, gf GhostLike, pe FanthomInterface) {
 	std := GetStandardByID(stdID)
 	if std == nil {
 		fmt.Println("[StandardTrigger] ❌ Not found:", stdID)

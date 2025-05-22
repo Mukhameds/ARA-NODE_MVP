@@ -17,20 +17,22 @@ type WillBlock struct {
 type WillEngine struct {
 	Memory  *MemoryEngine
 	Engine  *SignalEngine
-	Ghost   *GhostField
+	Ghost GhostLike
+
 	Fantom  FanthomInterface
 	Blocks  []WillBlock
 }
 
-func NewWillEngine(mem *MemoryEngine, se *SignalEngine, gf *GhostField, pe FanthomInterface) *WillEngine {
+func NewWillEngine(mem *MemoryEngine, se *SignalEngine, ghost GhostLike, pe FanthomInterface) *WillEngine {
 	return &WillEngine{
 		Memory:  mem,
 		Engine:  se,
-		Ghost:   gf,
+		Ghost:   ghost, 
 		Fantom:  pe,
 		Blocks:  []WillBlock{},
 	}
 }
+
 
 func (we *WillEngine) Evaluate(q QBit) bool {
 	score := 0.0

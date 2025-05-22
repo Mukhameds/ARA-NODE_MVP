@@ -7,30 +7,33 @@ import (
 	"ara-node/core"
 )
 
-// Instinct — осмысленный врождённый механизм ARA
+// Instinct — врождённый реактор (примитив сознания)
 type Instinct struct {
-	ID      string
-	Weight  float64
-	Meaning string
-	Danger  bool
+	ID       string
+	Weight   float64
+	Meaning  string
+	Danger   bool
 	Critical bool
 }
 
-// InstinctEngine — управляет базовыми инстинктами ARA
+// InstinctEngine — управляющий и возбуждающий блок
 type InstinctEngine struct {
-	LastInputTime time.Time
-	LastContents  []string
-	MaxHistory    int
+	Ghost          core.GhostLike
+	LastInputTime  time.Time
+	LastContents   []string
+	MaxHistory     int
 }
 
-func NewInstinctEngine() *InstinctEngine {
+// NewInstinctEngine — создаёт новый инстинкт-блок
+func NewInstinctEngine(ghost core.GhostLike) *InstinctEngine {
 	return &InstinctEngine{
+		Ghost:         ghost,
 		LastInputTime: time.Now(),
 		MaxHistory:    100,
 	}
 }
 
-// Tick — проверяет вход и активирует соответствующие инстинкты
+// Tick — формирует список сработавших инстинктов
 func (ie *InstinctEngine) Tick(now time.Time, input string) []Instinct {
 	instincts := []Instinct{}
 	inputLower := strings.ToLower(strings.TrimSpace(input))
@@ -50,7 +53,7 @@ func (ie *InstinctEngine) Tick(now time.Time, input string) []Instinct {
 
 	if strings.Contains(inputLower, "error") || strings.Contains(inputLower, "fail") {
 		instincts = append(instincts, Instinct{
-			ID: "instinct_error", Weight: 0.8, Meaning: "обнаружена ошибка — требуется защита",
+			ID: "instinct_error", Weight: 0.85, Meaning: "обнаружена ошибка — требуется защита",
 			Danger: true,
 		})
 	}
@@ -85,7 +88,7 @@ func (ie *InstinctEngine) Tick(now time.Time, input string) []Instinct {
 		})
 	}
 
-	// обновление истории
+	// обновляем историю
 	if inputLower != "" {
 		ie.LastContents = append(ie.LastContents, inputLower)
 		if len(ie.LastContents) > ie.MaxHistory {
@@ -96,17 +99,21 @@ func (ie *InstinctEngine) Tick(now time.Time, input string) []Instinct {
 	return instincts
 }
 
-// TickSignals — генерирует сигналы-инстинкты
+// TickSignals — возбуждает сигналы-инстинкты через GhostRocket
 func (ie *InstinctEngine) TickSignals(now time.Time, input string) []core.Signal {
 	instincts := ie.Tick(now, input)
 	signals := []core.Signal{}
 	for _, inst := range instincts {
-		signals = append(signals, inst.EmitAsSignal())
+		sig := inst.EmitAsSignal()
+		signals = append(signals, sig)
+		if ie.Ghost != nil {
+			ie.Ghost.Propagate(sig)
+		}
 	}
 	return signals
 }
 
-// EmitAsSignal — превращает инстинкт в сигнал
+// EmitAsSignal — преобразует инстинкт в сигнал
 func (inst Instinct) EmitAsSignal() core.Signal {
 	tags := []string{"instinct", inst.ID}
 	if inst.Danger {
@@ -127,7 +134,7 @@ func (inst Instinct) EmitAsSignal() core.Signal {
 	}
 }
 
-// GetInstinctBoost — усиливает фантом, если соответствует важному инстинкту
+// GetInstinctBoost — усиливает фантом в зависимости от инстинкта
 func (ie *InstinctEngine) GetInstinctBoost(tags []string) float64 {
 	boost := 0.0
 	if HasTag(tags, "standard") {
@@ -142,7 +149,7 @@ func (ie *InstinctEngine) GetInstinctBoost(tags []string) float64 {
 	return boost
 }
 
-// HasTag — проверка на тег (внутренняя)
+// HasTag — проверка на тег
 func HasTag(tags []string, k string) bool {
 	for _, t := range tags {
 		if strings.Contains(t, k) {
