@@ -117,9 +117,13 @@ Basic Commands:
 ## 📖 Documentation and Technical Specs
 
 * [Documentation Index](./ARA-NODE_Documentation_Index.md)
-* [System Architecture](./project_structure.md)
+
+* [System Architecture](https://github.com/Mukhameds/ARA-NODE_MVP/blob/main/project_structure_v3%2C6.md)
+
 * [Test Log v3.6](./ARA-NODE_test_v3,6_3.md)
-* [Live Status](./STATUS.md)
+
+* [Live Status](https://github.com/Mukhameds/ARA-NODE_MVP/blob/main/STATUS.md)
+
 
 ---
 
