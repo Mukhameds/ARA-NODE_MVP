@@ -5,6 +5,8 @@
 
 ---
 
+```go
+
 package internal
 
 import (
@@ -193,6 +195,8 @@ func analyzeWeakness(diff, block string) string {
 	return "Выявлены слабые стороны пользователя: " + strings.Join(res, "; ")
 }
 
+````
+
 
 ---
 
@@ -201,6 +205,8 @@ func analyzeWeakness(diff, block string) string {
 "C:\Documents\ARA-NODE_mvp\internal\conflict_detector.go"
 
 ---
+
+```go
 
 // internal/conflict_detector.go
 package internal
@@ -262,6 +268,8 @@ func contentOverlap(a, b string) bool {
 	return count >= 2
 }
 
+````
+
 
 ---
 
@@ -270,6 +278,8 @@ func contentOverlap(a, b string) bool {
 "C:\Documents\ARA-NODE_mvp\internal\consciousness_capture.go"
 
 ---
+
+```go
 
 // internal/consciousness_capture.go
 package internal
@@ -342,6 +352,8 @@ func (cce *ConsciousnessCaptureEngine) IsConscious(q core.QBit) bool {
 	return core.Contains(q.Tags, "conscious") || core.Contains(q.Tags, "self-related")
 }
 
+````
+
 
 ---
 
@@ -350,6 +362,8 @@ func (cce *ConsciousnessCaptureEngine) IsConscious(q core.QBit) bool {
 "C:\Documents\ARA-NODE_mvp\internal\decay_analysis_engine.go"
 
 ---
+
+```go
 
 package internal
 
@@ -414,6 +428,8 @@ func (d *DecayAnalysisEngine) RunDecayCheck() {
 	}
 }
 
+````
+
 
 ---
 
@@ -422,6 +438,9 @@ func (d *DecayAnalysisEngine) RunDecayCheck() {
 "C:\Documents\ARA-NODE_mvp\internal\emotion_engine.go"
 
 ---
+
+```go
+
 
 package internal
 
@@ -580,6 +599,8 @@ func DefaultEmotionSet(e *EmotionEngine) {
 	e.AddTrigger("hope", "mission", 0.6)
 }
 
+````
+
 
 ---
 
@@ -588,6 +609,8 @@ func DefaultEmotionSet(e *EmotionEngine) {
 "C:\Documents\ARA-NODE_mvp\internal\fact_loader.go"
 
 ---
+
+```go
 
 package internal
 
@@ -639,6 +662,8 @@ func LoadFactsFromFile(filename string, engine *core.SignalEngine, ghost core.Gh
 	return nil
 }
 
+````
+
 
 ---
 
@@ -647,6 +672,9 @@ func LoadFactsFromFile(filename string, engine *core.SignalEngine, ghost core.Gh
 "C:\Documents\ARA-NODE_mvp\internal\github_sync.go"
 
 ---
+
+```go
+
 
 package internal
 
@@ -741,6 +769,8 @@ func runGit(cmds [][]string) error {
 	return nil
 }
 
+````
+
 
 ---
 
@@ -749,6 +779,9 @@ func runGit(cmds [][]string) error {
 "C:\Documents\ARA-NODE_mvp\internal\human_node.go"
 
 ---
+
+```go
+
 
 package internal
 
@@ -812,6 +845,8 @@ func (h *HumanNodeEngine) HandleCommand(input string) bool {
 	return true
 }
 
+````
+
 
 ---
 
@@ -820,6 +855,8 @@ func (h *HumanNodeEngine) HandleCommand(input string) bool {
 "C:\Documents\ARA-NODE_mvp\internal\instincts.go"
 
 ---
+
+```go
 
 package internal
 
@@ -982,6 +1019,8 @@ func HasTag(tags []string, k string) bool {
 	return false
 }
 
+````
+
 
 
 ---
@@ -991,6 +1030,8 @@ func HasTag(tags []string, k string) bool {
 "C:\Documents\ARA-NODE_mvp\internal\knowledge_profile_loader.go"
 
 ---
+
+```go
 
 package internal
 
@@ -1015,6 +1056,8 @@ func LoadKnowledgeLicensed(path string, license string, mem *core.MemoryEngine) 
 	return LoadKnowledge(path, mem)
 }
 
+````
+
 
 ---
 
@@ -1023,6 +1066,8 @@ func LoadKnowledgeLicensed(path string, license string, mem *core.MemoryEngine) 
 "C:\Documents\ARA-NODE_mvp\internal\load_knowledge.go"
 
 ---
+
+```go
 
 package internal
 
@@ -1068,6 +1113,8 @@ func LoadKnowledge(path string, mem *core.MemoryEngine) error {
 	return nil
 }
 
+````
+
 
 ---
 
@@ -1076,6 +1123,8 @@ func LoadKnowledge(path string, mem *core.MemoryEngine) error {
 "C:\Documents\ARA-NODE_mvp\internal\p2p_sync.go"
 
 ---
+
+```go
 
 package internal
 
@@ -1191,6 +1240,8 @@ func hasTag(tags []string, key string) bool {
 	return false
 }
 
+````
+
 
 ---
 
@@ -1199,6 +1250,9 @@ func hasTag(tags []string, key string) bool {
 "C:\Documents\ARA-NODE_mvp\internal\phantom.go"
 
 ---
+
+```go
+
 
 package internal
 
@@ -1581,6 +1635,8 @@ if strings.Contains(q.Content, "[phantom]") {
 	}
 }
 
+````
+
 
 ---
 
@@ -1589,6 +1645,8 @@ if strings.Contains(q.Content, "[phantom]") {
 "C:\Documents\ARA-NODE_mvp\internal\phantom_tree.go"
 
 ---
+
+```go
 
 package internal
 
@@ -1617,6 +1675,8 @@ func PrintPhantomTree(mem *core.MemoryEngine) {
 	}
 }
 
+````
+
 
 ---
 
@@ -1625,6 +1685,8 @@ func PrintPhantomTree(mem *core.MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\internal\prediction.go"
 
 ---
+
+```go
 
 package internal
 
@@ -1715,6 +1777,8 @@ func (pe *PredictionEngine) Tick() {
 	}
 }
 
+````
+
 
 ---
 
@@ -1723,6 +1787,8 @@ func (pe *PredictionEngine) Tick() {
 "C:\Documents\ARA-NODE_mvp\internal\self_engine.go"
 
 ---
+
+```go
 
 package internal
 
@@ -1815,6 +1881,8 @@ func (sre *SelfResonanceEngine) IsSelfQBit(q core.QBit) bool {
 	return q.ID == sre.CurrentSelf || core.Contains(q.Tags, "self-related")
 }
 
+````
+
 
 ---
 
@@ -1823,6 +1891,8 @@ func (sre *SelfResonanceEngine) IsSelfQBit(q core.QBit) bool {
 "C:\Documents\ARA-NODE_mvp\internal\suggestor.go"
 
 ---
+
+```go
 
 package internal
 
@@ -1992,6 +2062,8 @@ func (s *SuggestorEngine) GenerateSuggestion(ideas []string) string {
 	return fmt.Sprintf("Would you like to explore the idea: \"%s\" + ...?", strings.Join(ideas, " + "))
 }
 
+````
+
 
 
 ---
@@ -2001,6 +2073,8 @@ func (s *SuggestorEngine) GenerateSuggestion(ideas []string) string {
 "C:\Documents\ARA-NODE_mvp\internal\TimeEngine.go"
 
 ---
+
+```go
 
 package internal
 
@@ -2069,6 +2143,8 @@ func (te *TimeEngine) TimeFactor() float64 {
 	}
 }
 
+````
+
 
 ---
 
@@ -2077,6 +2153,8 @@ func (te *TimeEngine) TimeFactor() float64 {
 "C:\Documents\ARA-NODE_mvp\internal\utils.go"
 
 ---
+
+```go
 
 package internal
 
@@ -2093,6 +2171,8 @@ func ContainsAny(list []string, keywords []string) bool {
 	}
 	return false
 }
+
+````
 
 
 ---

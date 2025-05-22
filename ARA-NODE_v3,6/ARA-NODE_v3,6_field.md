@@ -5,6 +5,8 @@
 
 ---
 
+```go
+
 package field
 
 import "ara-node/core"
@@ -24,6 +26,7 @@ func RocketAdapter(r *GhostRocket) core.GhostLike {
 	return &ghostAdapter{rocket: r}
 }
 
+````
 
 ---
 
@@ -32,6 +35,9 @@ func RocketAdapter(r *GhostRocket) core.GhostLike {
 "C:\Documents\ARA-NODE_mvp\field\field.go"
 
 ---
+
+```go
+
 
 package field
 
@@ -152,6 +158,8 @@ func tagsMatch(signalTags, matchTags []string) bool {
 	return false
 }
 
+````
+
 
 ---
 
@@ -160,6 +168,8 @@ func tagsMatch(signalTags, matchTags []string) bool {
 "C:\Documents\ARA-NODE_mvp\field\rocket.go"
 
 ---
+
+```go
 
 package field
 
@@ -203,6 +213,8 @@ func (r *GhostRocket) ListFields() {
 		fmt.Printf("- %s (%d blocks)\n", f.Name, len(f.Blocks))
 	}
 }
+
+````
 
 
 ---

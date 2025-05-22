@@ -5,6 +5,8 @@
 
 ---
 
+```go
+
 // core/bootstrap_digital_world.go
 package core
 
@@ -66,6 +68,7 @@ func BootstrapDigitalWorld(mem *MemoryEngine) {
 	fmt.Println("💻 [Bootstrap] Digital world and logic architecture loaded.")
 }
 
+````
 
 ---
 
@@ -74,6 +77,8 @@ func BootstrapDigitalWorld(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_grammar.go"
 
 ---
+
+```go
 
 // core/bootstrap_grammar.go
 package core
@@ -140,6 +145,7 @@ func BootstrapGrammarStructures(mem *MemoryEngine) {
 	fmt.Println("🧠 [Bootstrap] Grammar roles and sentence structures loaded.")
 }
 
+````
 
 ---
 
@@ -148,6 +154,8 @@ func BootstrapGrammarStructures(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_knowledge.go"
 
 ---
+
+```go
 
 // core/bootstrap_knowledge.go
 package core
@@ -199,6 +207,7 @@ func BootstrapKnowledgeConcepts(mem *MemoryEngine) {
 	fmt.Println("📚 [Bootstrap] Knowledge, truth, and epistemology loaded.")
 }
 
+````
 
 ---
 
@@ -207,6 +216,8 @@ func BootstrapKnowledgeConcepts(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_language.go"
 
 ---
+
+```go
 
 // core/bootstrap_language.go
 package core
@@ -277,10 +288,13 @@ func BootstrapCoreKnowledge(mem *MemoryEngine) {
 	fmt.Println("📘 [Bootstrap] Core language knowledge loaded: alphabet, digits, grammar rules.")
 }
 
+````
 
 ---
 
 ---
+
+```go
 
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_logic_axioms.go"
 
@@ -334,6 +348,7 @@ func BootstrapLogicAxioms(mem *MemoryEngine) {
 	fmt.Println("🔁 [Bootstrap] Formal logic axioms loaded.")
 }
 
+````
 
 ---
 
@@ -342,6 +357,8 @@ func BootstrapLogicAxioms(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_axioms.go"
 
 ---
+
+```go
 
 // core/bootstrap_math_axioms.go
 package core
@@ -396,6 +413,7 @@ func BootstrapMathAxioms(mem *MemoryEngine) {
 	fmt.Println("📐 [Bootstrap] Math axioms and operational laws loaded.")
 }
 
+````
 
 ---
 
@@ -404,6 +422,9 @@ func BootstrapMathAxioms(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_calculus.go"
 
 ---
+
+```go
+
 
 // core/bootstrap_math_calculus.go
 package core
@@ -456,6 +477,7 @@ func BootstrapMathCalculus(mem *MemoryEngine) {
 	fmt.Println("📉 [Bootstrap] Calculus concepts (limits, derivatives, integrals) loaded.")
 }
 
+````
 
 ---
 
@@ -464,6 +486,8 @@ func BootstrapMathCalculus(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_concepts.go"
 
 ---
+
+```go
 
 // core/bootstrap_math_concepts.go
 package core
@@ -512,6 +536,7 @@ func BootstrapMathConcepts(mem *MemoryEngine) {
 	fmt.Println("🔢 [Bootstrap] Math quantity and number concepts loaded.")
 }
 
+````
 
 ---
 
@@ -520,6 +545,8 @@ func BootstrapMathConcepts(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_discrete.go"
 
 ---
+
+```go
 
 // core/bootstrap_math_discrete.go
 package core
@@ -575,6 +602,7 @@ func BootstrapMathDiscrete(mem *MemoryEngine) {
 	fmt.Println("🔂 [Bootstrap] Discrete mathematics concepts loaded.")
 }
 
+````
 
 ---
 
@@ -583,6 +611,8 @@ func BootstrapMathDiscrete(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_equations.go"
 
 ---
+
+```go
 
 // core/bootstrap_math_equations.go
 package core
@@ -637,6 +667,7 @@ func BootstrapMathEquations(mem *MemoryEngine) {
 	fmt.Println("🧮 [Bootstrap] Mathematical equations and solving logic loaded.")
 }
 
+````
 
 ---
 
@@ -645,6 +676,9 @@ func BootstrapMathEquations(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_functions.go"
 
 ---
+
+```go
+
 
 // core/bootstrap_math_functions.go
 package core
@@ -698,6 +732,7 @@ func BootstrapMathFunctions(mem *MemoryEngine) {
 	fmt.Println("🔁 [Bootstrap] Mathematical functions and mappings loaded.")
 }
 
+````
 
 ---
 
@@ -706,6 +741,9 @@ func BootstrapMathFunctions(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_geometry.go"
 
 ---
+
+```go
+
 
 // core/bootstrap_math_geometry.go
 package core
@@ -765,6 +803,7 @@ func BootstrapMathGeometry(mem *MemoryEngine) {
 	fmt.Println("📐 [Bootstrap] Geometry concepts and spatial logic loaded.")
 }
 
+````
 
 ---
 
@@ -773,6 +812,8 @@ func BootstrapMathGeometry(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_linear_algebra.go"
 
 ---
+
+```go
 
 // core/bootstrap_math_linear_algebra.go
 package core
@@ -829,6 +870,7 @@ func BootstrapMathLinearAlgebra(mem *MemoryEngine) {
 	fmt.Println("📊 [Bootstrap] Linear algebra concepts loaded.")
 }
 
+````
 
 ---
 
@@ -837,6 +879,8 @@ func BootstrapMathLinearAlgebra(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_operations.go"
 
 ---
+
+```go
 
 // core/bootstrap_math_operations.go
 package core
@@ -886,6 +930,7 @@ func BootstrapMathOperations(mem *MemoryEngine) {
 	fmt.Println("➗ [Bootstrap] Math operations and arithmetic rules loaded.")
 }
 
+````
 
 ---
 
@@ -894,6 +939,8 @@ func BootstrapMathOperations(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_probability.go"
 
 ---
+
+```go
 
 // core/bootstrap_math_probability.go
 package core
@@ -947,6 +994,8 @@ func BootstrapMathProbability(mem *MemoryEngine) {
 	fmt.Println("🎲 [Bootstrap] Probability and randomness concepts loaded.")
 }
 
+````
+
 
 ---
 
@@ -955,6 +1004,8 @@ func BootstrapMathProbability(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_sets.go" 
 
 ---
+
+```go
 
 // core/bootstrap_math_sets.go
 package core
@@ -1009,6 +1060,7 @@ func BootstrapMathSets(mem *MemoryEngine) {
 	fmt.Println("📦 [Bootstrap] Mathematical sets and relations loaded.")
 }
 
+````
 
 ---
 
@@ -1017,6 +1069,8 @@ func BootstrapMathSets(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_math_symbols.go" 
 
 ---
+
+```go
 
 // core/bootstrap_math_symbols.go
 package core
@@ -1146,6 +1200,7 @@ func BootstrapMathSymbols(mem *MemoryEngine) {
 	fmt.Println("🔢 [Bootstrap] Math symbols, digits, and operators loaded.")
 }
 
+````
 
 ---
 
@@ -1154,6 +1209,8 @@ func BootstrapMathSymbols(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_morphology.go"
 
 ---
+
+```go
 
 // core/bootstrap_morphology.go
 package core
@@ -1236,6 +1293,7 @@ func BootstrapMorphologyRules(mem *MemoryEngine) {
 	fmt.Println("🔠 [Bootstrap] Morphology rules, prefixes, suffixes loaded.")
 }
 
+````
 
 ---
 
@@ -1244,6 +1302,9 @@ func BootstrapMorphologyRules(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_physics.go"
 
 ---
+
+```go
+
 
 // core/bootstrap_physics.go
 package core
@@ -1304,6 +1365,7 @@ func BootstrapPhysicsConcepts(mem *MemoryEngine) {
 	fmt.Println("🌌 [Bootstrap] Physical concepts loaded.")
 }
 
+````
 
 ---
 
@@ -1312,6 +1374,8 @@ func BootstrapPhysicsConcepts(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_physics_constants.go"
 
 ---
+
+```go
 
 // core/bootstrap_physics_constants.go
 package core
@@ -1364,6 +1428,7 @@ func BootstrapPhysicsConstants(mem *MemoryEngine) {
 	fmt.Println("🔬 [Bootstrap] Physical constants loaded.")
 }
 
+````
 
 ---
 
@@ -1372,6 +1437,8 @@ func BootstrapPhysicsConstants(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_physics_cosmos.go"
 
 ---
+
+```go
 
 // core/bootstrap_physics_cosmos.go
 package core
@@ -1425,6 +1492,7 @@ func BootstrapPhysicsCosmos(mem *MemoryEngine) {
 	fmt.Println("🌌 [Bootstrap] Cosmos and astrophysics concepts loaded.")
 }
 
+````
 
 ---
 
@@ -1433,6 +1501,8 @@ func BootstrapPhysicsCosmos(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_physics_formulas.go"
 
 ---
+
+```go
 
 // core/bootstrap_physics_formulas.go
 package core
@@ -1485,6 +1555,7 @@ func BootstrapPhysicsFormulas(mem *MemoryEngine) {
 	fmt.Println("⚙️ [Bootstrap] Physics formulas and physical laws loaded.")
 }
 
+````
 
 ---
 
@@ -1493,6 +1564,8 @@ func BootstrapPhysicsFormulas(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_physics_quantum.go"
 
 ---
+
+```go
 
 // core/bootstrap_physics_quantum.go
 package core
@@ -1542,6 +1615,7 @@ func BootstrapPhysicsQuantum(mem *MemoryEngine) {
 	fmt.Println("🧬 [Bootstrap] Quantum physics concepts loaded.")
 }
 
+````
 
 ---
 
@@ -1550,6 +1624,8 @@ func BootstrapPhysicsQuantum(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_self.go"
 
 ---
+
+```go
 
 // core/bootstrap_self.go
 package core
@@ -1603,6 +1679,7 @@ func BootstrapSelfIdentity(mem *MemoryEngine) {
 	fmt.Println("🧬 [Bootstrap] Self-identity and signal consciousness loaded.")
 }
 
+````
 
 ---
 
@@ -1611,6 +1688,8 @@ func BootstrapSelfIdentity(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_semantics.go"
 
 ---
+
+```go
 
 // core/bootstrap_semantics.go
 package core
@@ -1663,6 +1742,7 @@ func BootstrapSemanticLinks(mem *MemoryEngine) {
 	fmt.Println("🔗 [Bootstrap] Semantic relationships loaded.")
 }
 
+````
 
 ---
 
@@ -1671,6 +1751,8 @@ func BootstrapSemanticLinks(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_symbols.go"
 
 ---
+
+```go
 
 // core/bootstrap_symbols.go
 package core
@@ -1757,6 +1839,7 @@ func BootstrapSymbolArchitecture(mem *MemoryEngine) {
 	fmt.Println("🔤 [Bootstrap] Symbol primitives and letter structures loaded.")
 }
 
+````
 
 ---
 
@@ -1765,6 +1848,8 @@ func BootstrapSymbolArchitecture(mem *MemoryEngine) {
 "C:\Documents\ARA-NODE_mvp\core\bootstrap_temporal_logic.go"
 
 ---
+
+```go
 
 // core/bootstrap_temporal_logic.go
 package core
@@ -1812,6 +1897,7 @@ func BootstrapTemporalLogic(mem *MemoryEngine) {
 	fmt.Println("⏳ [Bootstrap] Temporal logic and causality loaded.")
 }
 
+````
 
 ---
 

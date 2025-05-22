@@ -5,6 +5,8 @@
 
 ---
 
+```go
+
 package main
 
 import (
@@ -239,6 +241,8 @@ func main() {
 	}
 }
 
+````
+
 ---
 
 ---
@@ -246,6 +250,8 @@ func main() {
 "C:\Documents\ARA-NODE_mvp\config\manifest.go"
 
 ---
+
+```go
 
 package config
 
@@ -273,6 +279,8 @@ func InitSelfKernel() *SelfKernel {
 	fmt.Println("[SelfKernel] Initialized:", kernel.AgentID)
 	return kernel
 }
+
+````
 
 ---
 
