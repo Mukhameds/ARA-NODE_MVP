@@ -5,6 +5,8 @@
 
 ---
 
+```go
+
 // core/attention_engine.go
 package core
 
@@ -106,6 +108,8 @@ func (ae *AttentionEngine) StartBackgroundThinking() {
 	}()
 }
 
+````
+
 
 ---
 
@@ -114,6 +118,8 @@ func (ae *AttentionEngine) StartBackgroundThinking() {
 "C:\Documents\ARA-NODE_mvp\core\dual_processor.go"
 
 ---
+
+```go
 
 // core/dual_processor.go
 package core
@@ -182,6 +188,7 @@ func (dp *DualProcessor) ProcessDual(sig Signal) {
 	dp.Memory.StoreQBit(finalQBit)
 	fmt.Println("[DualProcessor] ✅ Stored superposed QBit:", finalQBit.Content)
 }
+````
 
 
 ---
@@ -191,6 +198,8 @@ func (dp *DualProcessor) ProcessDual(sig Signal) {
 "C:\Documents\ARA-NODE_mvp\core\helpers.go"
 
 ---
+
+```go
 
 
 package core
@@ -250,6 +259,8 @@ func Tokenize(s string) []string {
 	return strings.Fields(strings.ToLower(s))
 }
 
+````
+
 
 ---
 
@@ -258,6 +269,8 @@ func Tokenize(s string) []string {
 "C:\Documents\ARA-NODE_mvp\core\memory_engine.go"
 
 ---
+
+```go
 
 package core
 
@@ -518,6 +531,7 @@ func (m *MemoryEngine) EstimateTotalPhase() float64 {
 	return sum / float64(count)
 }
 
+````
 
 ---
 
@@ -526,6 +540,8 @@ func (m *MemoryEngine) EstimateTotalPhase() float64 {
 "C:\Documents\ARA-NODE_mvp\core\QBitEvolutionEngine.go"
 
 ---
+
+```go
 
 package core
 
@@ -572,6 +588,7 @@ func (qe *QBitEvolutionEngine) EvolveAll() {
 	}
 }
 
+````
 
 ---
 
@@ -580,6 +597,8 @@ func (qe *QBitEvolutionEngine) EvolveAll() {
 "C:\Documents\ARA-NODE_mvp\core\reflex_engine.go"
 
 ---
+
+```go
 
 package core
 
@@ -653,6 +672,7 @@ func DefaultReflexSet(re *ReflexEngine) {
 	})
 }
 
+````
 
 ---
 
@@ -661,6 +681,8 @@ func DefaultReflexSet(re *ReflexEngine) {
 "C:\Documents\ARA-NODE_mvp\core\resonance_matrix.go"
 
 ---
+
+```go
 
 package core
 
@@ -759,6 +781,7 @@ func (rm *ResonanceMatrix) Print(id string) {
 	}
 }
 
+````
 
 ---
 
@@ -767,6 +790,8 @@ func (rm *ResonanceMatrix) Print(id string) {
 "C:\Documents\ARA-NODE_mvp\core\sense_heuristics.go"
 
 ---
+
+```go
 
 package core
 
@@ -841,6 +866,7 @@ func HeuristicScore(content string) float64 {
 	return score
 }
 
+````
 
 ---
 
@@ -849,6 +875,8 @@ func HeuristicScore(content string) float64 {
 "C:\Documents\ARA-NODE_mvp\core\shutdown_engine.go"
 
 ---
+
+```go
 
 // core/shutdown_engine.go
 package core
@@ -929,6 +957,7 @@ func (se *ShutdownEngine) StartCollapse() {
 	fmt.Println("[ShutdownEngine] 💀 ARA-NODE has ceased functioning.")
 }
 
+````
 
 ---
 
@@ -937,6 +966,8 @@ func (se *ShutdownEngine) StartCollapse() {
 "C:\Documents\ARA-NODE_mvp\core\signal_dictionary.go"
 
 ---
+
+```go
 
 package core
 
@@ -1108,7 +1139,7 @@ func (sd *SignalDictionary) Buffer() []string {
 	return sd.buffer
 }
 
-
+````
 
 ---
 
@@ -1116,7 +1147,9 @@ func (sd *SignalDictionary) Buffer() []string {
 
 "C:\Documents\ARA-NODE_mvp\core\signal_engine.go"
 
---
+---
+
+```go
 
 package core
 
@@ -1191,6 +1224,7 @@ func (se *SignalEngine) ProcessSignal(sig Signal) Reaction {
 	}
 }
 
+````
 
 ---
 
@@ -1199,6 +1233,8 @@ func (se *SignalEngine) ProcessSignal(sig Signal) Reaction {
 "C:\Documents\ARA-NODE_mvp\core\standards.go"
 
 ---
+
+```go
 
 package core
 
@@ -1339,6 +1375,7 @@ func SynthesizeStandardFromQBits(id string, keywords []string, priority float64,
 	return &std
 }
 
+````
 
 ---
 
@@ -1347,6 +1384,8 @@ func SynthesizeStandardFromQBits(id string, keywords []string, priority float64,
 "C:\Documents\ARA-NODE_mvp\core\types.go"
 
 ---
+
+```go
 
 package core
 
@@ -1477,6 +1516,7 @@ func SignalFromQBit(q QBit) Signal {
 	}
 }
 
+````
 
 ---
 
@@ -1485,6 +1525,8 @@ func SignalFromQBit(q QBit) Signal {
 "C:\Documents\ARA-NODE_mvp\core\will_engine.go"
 
 ---
+
+```go
 
 package core
 
@@ -1643,7 +1685,11 @@ func equalSources(a, b []string) bool {
 	return match >= len(a)*80/100
 }
 
+````
+
 
 ---
 
 ---
+
+
