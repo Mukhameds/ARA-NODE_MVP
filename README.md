@@ -120,7 +120,7 @@ Basic Commands:
 
 * [System Architecture](https://github.com/Mukhameds/ARA-NODE_MVP/blob/main/project_structure_v3%2C6.md)
 
-* [Test Log v3.6](./ARA-NODE_test_v3,6_3.md)
+* [Test Log v3.6](https://github.com/Mukhameds/ARA-NODE_MVP/blob/main/ARA-NODE_v3.6_Test_Log_Analysis%20%E2%80%94%20Session_4.md)
 
 * [Live Status](https://github.com/Mukhameds/ARA-NODE_MVP/blob/main/STATUS.md)
 
