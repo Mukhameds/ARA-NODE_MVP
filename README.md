@@ -131,7 +131,7 @@ Basic Commands:
 
 **Mukhamed Kamilovich Satybaev**
 
-* 🌐 [ARU-AGI Project](https://mukhameds.github.io/ARU-AGI-Project/)
+* 🌐 [ARA-NODE_AI-AGENT Project](https://mukhameds.github.io/ARA-NODE_AI-AGENT/)
 * 🐦 [Twitter/X](https://x.com/redkms2025)
 * 🔗 [LinkedIn](https://www.linkedin.com/in/muhamed-satybaev-38b864362)
 * 📁 [GitHub: Mukhameds](https://github.com/Mukhameds)
