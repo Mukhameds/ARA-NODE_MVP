@@ -114,6 +114,10 @@ Basic Commands:
 
 ---
 
+* [Documentation Index](https://github.com/Mukhameds/ARA-NODE_MVP/blob/main/field_diagrame.svg)
+
+---
+
 ## 📖 Documentation and Technical Specs
 
 * [Documentation Index](./ARA-NODE_Documentation_Index.md)
